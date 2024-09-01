@@ -15,7 +15,7 @@ export default defineNuxtConfig({
       },
     },
   },
-  css: ["/assets/css/main.css"],
+  css: ["/assets/css/main.css", 'primeicons/primeicons.css'],
   app: {
     head: {
       title: "MOEN | Online Data App",

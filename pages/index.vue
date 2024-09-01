@@ -4,7 +4,7 @@
       <imgSlider />
     </div>
     <main class="container">
-      <NuxtLink to="/stations/manual/all-data">
+      <NuxtLink to="/stations/manual/table">
         GO to Stations 
       </NuxtLink>
     </main>
