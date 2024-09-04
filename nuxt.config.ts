@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@primevue/nuxt-module",
     '@pinia/nuxt',
-    "nuxt3-leaflet"
+    "nuxt3-leaflet",
+    "nuxt-icon"
   ],
   primevue: {
     options: {

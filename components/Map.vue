@@ -53,7 +53,13 @@ const map = ref(null);
 let L = null; 
 
 const filteredStations = computed(() => {
-  return props?.stations?.data.filter(st => st.lat || st.lng != null);
+  if (Array.isArray(props?.stations)) {
+    return props.stations.filter(st => st.lat || st.lng != null);
+  } else if (props?.stations?.data && Array.isArray(props.stations.data)) {
+    return props.stations.data.filter(st => st.lat || st.lng != null);
+  } else {
+    return [];
+  }
 });
 
 function handleClick(stationId) {

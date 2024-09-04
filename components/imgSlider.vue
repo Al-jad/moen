@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <Galleria
       :value="images"
       :circular="false"
@@ -11,12 +11,12 @@
       :showThumbnails="false"
       :responsiveOptions="responsiveOptions"
       >
-      <template #item="images">
+      <template #item="slotProps">
         <div class="w-full">
           <img
             class="h-96 min-w-full object-cover sm:max-h-44 sm:!min-h-44"
-            :src="images.item.itemImageSrc"
-            :alt="images.item.alt"
+            :src="slotProps.item.itemImageSrc"
+            :alt="slotProps.item.alt"
           />
           <!-- <div
                         class="absolute bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-black bg-fixed opacity-20">
@@ -46,7 +46,7 @@ const images = ref([
   },
   {
     itemImageSrc: '/assets/img/one-hand.jpg',
-    alt: 'Image 2'
+    alt: 'Image 3'
   }
 ]);
 const responsiveOptions = ref([

@@ -8,7 +8,7 @@
         <div class="flex flex-col items-center justify-center">
           <div class="select">
             <SelectButton
-              class="select mx-auto"
+              class="mx-auto"
               v-model="value"
               :options="options"
               @update:modelValue="handleViewChange"
@@ -75,3 +75,13 @@ onMounted(async () => {
   }
 });
 </script>
+
+<style>
+/* .p-datepicker-input,.p-datepicker-header, .p-datepicker-panel {
+  @apply !bg-red-400
+}
+.p-datepicker-month-selected {
+  @apply !bg-blue-400
+}  */
+</style>
+
