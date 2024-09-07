@@ -2,7 +2,7 @@
   <div
     class="bg-base-100 relative h-56 w-96 overflow-hidden rounded-xl shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-2 hover:scale-105 hover:shadow-xl"
   >
-    <NuxtLink :to="link" :target="external ? '_blank' : '_self'" class="block h-full">
+    <NuxtLink :href="link" :target="external ? '_blank' : '_self'" class="block h-full">
       <img
         :src="image"
         :alt="title"

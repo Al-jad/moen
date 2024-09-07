@@ -31,9 +31,3 @@ onMounted(async () => {
   data.value = StationDetails.data;
 });
 </script>
-
-<style scoped>
-.p-togglebutton {
-  
-}
-</style>

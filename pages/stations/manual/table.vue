@@ -36,16 +36,18 @@
         </div>
       </div>
       <div class="container">
-        <div v-if="ManualStation.loading">Loading...</div>
         <div v-if="ManualStation.error" class="error">{{ ManualStation.error }}</div>
-        <Table :value="filteredData" v-else />
+        <Table
+          :value="filteredData"
+          v-else
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-const ManualStation = useManualStation();
+const ManualStation = useManualDetails();
 const Stations = ref([]);
 const value = ref('Table View');
 const options = ref(['Table View', 'Map View']);
@@ -58,18 +60,22 @@ const handleViewChange = (newValue) => {
 };
 
 const filteredData = computed(() => {
-  return Stations.value.filter(
+  const filtered = Stations.value.filter(
     (station) =>
       station.station.name.toLowerCase().includes(searchVal.value.toLowerCase()) ||
       station.station.city.toLowerCase().includes(searchVal.value.toLowerCase()) ||
       station.station.externalId.toLowerCase().includes(searchVal.value.toLowerCase())
   );
+  console.log('Filtered data:', filtered);
+  return filtered;
 });
 
 onMounted(async () => {
   try {
     await ManualStation.fetchData();
-    Stations.value = ManualStation.data?.data || [];
+    console.log('ManualStation data:', ManualStation.data);
+    Stations.value = ManualStation.data || [];
+    console.log('Stations value:', Stations.value);
   } catch (error) {
     console.error('Error fetching station data:', error);
   }

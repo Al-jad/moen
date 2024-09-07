@@ -7,7 +7,8 @@ export default defineNuxtConfig({
     "@primevue/nuxt-module",
     '@pinia/nuxt',
     "nuxt3-leaflet",
-    "nuxt-icon"
+    "nuxt-icon",
+    "nuxt-echarts"
   ],
   primevue: {
     options: {

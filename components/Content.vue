@@ -1,11 +1,11 @@
 <template>
-  <div class="flex flex-col md:flex-row items-center justify-between gap-8 p-6 bg-white rounded-lg shadow-md transition-all duration-300 hover:shadow-xl">
+  <div class="flex flex-col md:flex-row items-center justify-between gap-8 p-6 bg-white rounded-lg shadow-md sm:w-[90%] mx-auto transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1">
     <div class="flex-1 md:pr-8 animate-fade-in">
-      <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-gray-800 animate-slide-down">{{ title }}</h1>
-      <p class="text-base sm:text-lg md:text-xl text-gray-600 leading-relaxed animate-slide-up">{{ description }}</p>
+      <h2 class="text-xl font-bold mb-4 text-gray-800 animate-slide-down hover:scal">{{ title }}</h2>
+      <p class="text-base text-gray-600 leading-relaxed animate-slide-up">{{ description }}</p>
     </div>
     <div class="flex-shrink-0 mt-6 md:mt-0 animate-fade-in">
-      <img :src="image" :alt="title" class="w-full md:w-80 h-auto object-cover rounded-lg shadow-lg transition-all duration-300 hover:scale-105" />
+      <img :src="image" :alt="title" class="w-full md:w-96 h-auto object-cover rounded-lg shadow-lg transition-all duration-300 hover:scale-105" loading="lazy" />
     </div>
   </div>
 </template>

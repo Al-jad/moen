@@ -1,112 +1,57 @@
 <template>
-  <div class="container">
+  <div class="container mx-auto">
+    <div class="rounded-t-lg p-3 text-sm text-black">
+      Showing {{ Math.min(rows, value.length) }} of {{ value.length }} entries
+    </div>
     <DataTable
-      showGridlines
+      :value="value"
+      class="text-nowrap !bg-DarkBlue"
+      :rows="3"
       :paginator="true"
-      stripedRows
-      :value="value"
-      rowGroupMode="rowspan"
-      groupRowsBy="station.city"
-      sortMode="single"
-      sortField="station.city"
-      :sortOrder="1"
-      :rows="20"
-      scrollable
-      v-model:expandedRows="expandedRows"
-      dataKey="id"
-      class="hidden text-nowrap sm:block"
+      @row-click="onRowClick"
     >
-      <!-- <Column field="station.city" header="City" style="max-width: 100px" /> -->
-      <Column expander headerStyle="width: 3rem" style="padding: 0" />
-
-      <Column
-        v-for="col in visibleColumns"
-        :key="col.field"
-        :field="col.field"
-        :header="col.header"
-        :class="col.class"
-      >
-        <template v-if="col.customBody" #body="slotProps">
-          <div :class="['wqi-cell', getWQIClass(slotProps.data.wqi)]">
-            {{ slotProps.data.wqi }}
-          </div>
-        </template>
-        <template v-else-if="col.field.includes('.')" #body="slotProps">
-          {{ getNestedValue(slotProps.data, col.field) }}
-        </template>
-      </Column>
-
-      <template #expansion="slotProps">
-        <div class="p-3">
-          <DataTable :value="[slotProps.data]">
-            <Column
-              v-for="col in hiddenColumns"
-              :key="col.field"
-              :field="[col.field]"
-              :header="col.header"
-            ></Column>
-          </DataTable>
-          <!-- <div class="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
-            <div v-for="col in hiddenColumns" :key="col.field" class="flex flex-col">
-              <span class="text-lg font-bold underline">{{ col.header }}:</span>
-              <span class="">{{ slotProps.data[col.field] }}</span>
-            </div>
-          </div> -->
-        </div>
+      <template #empty>
+        <div class="m-0 bg-DarkBlue p-4 text-center text-white">No data available</div>
       </template>
-    </DataTable>
-
-    <DataTable
-      showGridlines
-      @row-click="handleClick($event?.data?.station?.id)"
-      scrollable
-      stripedRows
-      :value="value"
-      rowGroupMode="rowspan"
-      groupRowsBy="station.city"
-      sortMode="single"
-      sortField="station.city"
-      :sortOrder="1"
-      class="text-nowrap sm:hidden"
-    >
-      <!-- <Column field="station.city" header="City" style="max-width: 120px" /> -->
-
       <Column
-        v-for="col in FrozenCols"
-        style="position: sticky"
-        :key="col.field"
-        :field="col.field"
-        :header="col.header"
-        :frozen="true"
+        field="station.externalId"
+        headerClass="!bg-DarkBlue rounded-tl-lg !text-white"
+        header="ID"
+        :sortable="true"
       ></Column>
-
       <Column
-        v-for="col in NonFrozen"
-        :key="col.field"
-        :field="col.field"
-        :header="col.header"
-        :class="col.class"
+        field="station.name"
+        headerClass="!bg-DarkBlue !text-white"
+        header="Name"
+        :sortable="true"
+      ></Column>
+      <Column
+        field="station.city"
+        headerClass="!bg-DarkBlue !text-white"
+        header="City"
+        :sortable="true"
+      ></Column>
+      <Column
+        field="wqi"
+        headerClass="!bg-DarkBlue !text-white"
+        header="Water Quality Index"
+        :sortable="true"
       >
-        <template v-if="col.customBody" #body="slotProps">
-          <div :class="['wqi-cell', getWQIClass(slotProps.data.wqi)]">
-            {{ slotProps.data.wqi }}
+        <template #body="slotProps">
+          <div :class="['wqi-cell', getWQIClass(slotProps.data.wqi)]" class="ml-12 !text-center">
+            <span class="wqi-value">{{ slotProps.data.wqi }}</span>
+            <span class="wqi-description">{{ getWQIDescription(slotProps.data.wqi) }}</span>
           </div>
-        </template>
-        <template v-else-if="col.field === 'timeStamp'" #body="slotProps">
-          {{ getNestedValue(slotProps.data, col.field) }}
-        </template>
-        <template v-else-if="col.field.includes('.')" #body="slotProps">
-          {{ getNestedValue(slotProps.data, col.field) }}
-        </template>
-        <template v-else #body="slotProps">
-          {{ slotProps.data[col.field] }}
         </template>
       </Column>
-      <Column header="Details">
-        <template #body>
-          <div class="flex">
-            <i class="pi pi-external-link text-white"></i>
-          </div>
+      <Column
+        field="timeStamp"
+        headerClass="!bg-DarkBlue !text-white rounded-tr-lg"
+        header="Date"
+        :sortable="true"
+      >
+        <template #body="slotProps">
+          {{ formatDate(slotProps.data.timeStamp) }}
         </template>
       </Column>
     </DataTable>
@@ -114,8 +59,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+
 const router = useRouter();
+
 const props = defineProps({
   value: {
     type: Array,
@@ -123,129 +71,86 @@ const props = defineProps({
   }
 });
 
-const expandedRows = ref({});
+const getWQIClass = (wqi) => {
+  if (wqi >= 95) return 'excellent';
+  if (wqi >= 80) return 'good';
+  if (wqi >= 65) return 'fair';
+  if (wqi >= 45) return 'poor';
+  return 'very-poor';
+};
 
-const allColumns = [
-  { field: 'station.externalId', header: 'ID' },
-  { field: 'station.name', header: 'Name' },
-  {
-    field: 'wqi',
-    header: 'WQI',
-    class: 'p-0 !text-center',
-    customBody: true
-  },
-  { field: 'timeStamp', header: 'Date' },
-  { field: 'ph', header: 'pH' },
-  { field: 'temp', header: 'Temp' },
-  { field: 'dO2', header: 'DO2' },
-  { field: 'boD5', header: 'BOD5' },
-  { field: 'pO4', header: 'PO₄' },
-  { field: 'nO3', header: 'NO₃' },
-  { field: 'ca', header: 'Ca' },
-  { field: 'mg', header: 'Mg' },
-  { field: 'th', header: 'TH' },
-  { field: 'k', header: 'K' },
-  { field: 'na', header: 'Na' },
-  { field: 'sO4', header: 'SO₄' },
-  { field: 'cl', header: 'CL' },
-  { field: 'tds', header: 'TDS' },
-  { field: 'ec', header: 'EC' },
-  { field: 'alk', header: 'Alk.' },
-  { field: 'acid', header: 'Acid' },
-  { field: 'onG', header: 'O&G' }
-];
+const getWQIDescription = (wqi) => {
+  if (wqi >= 95) return 'ممتاز';
+  if (wqi >= 80) return 'جيد';
+  if (wqi >= 65) return 'مقبول';
+  if (wqi >= 45) return 'ردئ';
+  return 'مرفوض';
+};
 
-const FrozenCols = computed(() => {
-  return allColumns.slice(0, 2);
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+};
+
+const sortedValue = computed(() => {
+  return [...props.value].sort((a, b) => b.wqi - a.wqi);
 });
 
-const NonFrozen = computed(() => {
-  return allColumns.slice(2);
-});
-
-const visibleColumns = computed(() => {
-  return allColumns.slice(0, 3);
-});
-
-const hiddenColumns = computed(() => {
-  return allColumns.slice(4);
-});
-
-function getWQIClass(wqi) {
-  if (wqi >= 80) {
-    return 'excellent';
-  } else if (wqi >= 60) {
-    return 'good';
-  } else if (wqi >= 40) {
-    return 'fair';
-  } else if (wqi >= 20) {
-    return 'poor';
-  } else {
-    return 'very-poor';
-  }
-}
-function handleClick(stationId) {
+const onRowClick = (event) => {
+  const stationId = event.data.station.id;
   router.push(`/stations/manual/details/${stationId}`);
-}
-function getNestedValue(obj, path) {
-  const value = path.split('.').reduce((p, c) => (p && p[c]) || null, obj);
-
-  if (path === 'timeStamp' && value) {
-    const date = new Date(value);
-    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-    return formattedDate;
-  }
-
-  return value;
-}
+};
 </script>
 
 <style>
-/* .p-togglebutton {
-  @apply !bg-red-700
-} */
-.p-datatable-header-cell {
-  @apply !bg-black !text-white;
-}
-
-.p-datatable-row-expansion {
-  @apply !bg-slate-700;
+.p-datatable tr {
+  @apply !bg-DarkBlue cursor-pointer;
 }
 .p-paginator {
-  @apply !bg-black;
-}
-.p-row-even td {
-  @apply !bg-gray-400 !text-white;
-}
-.p-row-odd td {
-  @apply !bg-gray-600 !text-white;
-}
-.wqi-cell {
-  @apply min-h-full w-full text-xl text-nowrap p-4 !text-center;
+  @apply !bg-DarkBlue !text-white;
 }
 
-.p-paginator-page-selected {
-  @apply bg-red-900;
+.wqi-cell {
+  @apply flex h-16 w-16 flex-col items-center justify-center rounded-full shadow-sm;
 }
+
+.wqi-value {
+  @apply text-sm font-bold;
+}
+
+.wqi-description {
+  @apply text-xs;
+}
+
 .excellent {
-  background-color: #2e7d32;
+  @apply bg-gradient-to-br from-blue-400 to-blue-600 text-white;
 }
 .good {
-  background-color: #0288d1;
+  @apply bg-gradient-to-br from-green-400 to-green-600 text-white;
 }
 .fair {
-  background-color: #fbc02d;
-  color: black;
+  @apply bg-gradient-to-br from-yellow-400 to-yellow-600 text-gray-900;
 }
 .poor {
-  background-color: #fb8c00;
-  color: black;
+  @apply bg-gradient-to-br from-orange-400 to-orange-600 text-white;
 }
 .very-poor {
-  background-color: #c62828;
-  color: black;
+  @apply bg-gradient-to-br from-red-400 to-red-600 text-white;
 }
-:deep(.p-column-header-content) {
-  @apply text-center;
+
+.p-datatable .p-datatable-tbody > tr.p-row-even {
+  @apply !bg-gray-100 !text-black;
+}
+.p-datatable .p-datatable-tbody > tr.p-row-odd {
+  @apply !bg-gray-200 !text-black;
+}
+.p-datatable .p-datatable-tbody > tr:not(.p-datatable-empty-message):hover {
+  @apply !bg-gray-300 !text-black !cursor-pointer;
+}
+.p-paginator-rpp-dropdown {
+  @apply !bg-DarkNavy !text-white border-white;
+}
+.p-select-overlay {
+  @apply !bg-DarkNavy hover:!bg-DarkBlue !text-white border-white;
 }
 </style>
