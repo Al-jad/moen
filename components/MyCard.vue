@@ -1,16 +1,16 @@
 <template>
   <div
-    class="bg-base-100 relative h-56 w-96 overflow-hidden rounded-xl shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-2 hover:scale-105 hover:shadow-xl"
+    class="bg-base-100 relative h-56 w-96 overflow-hidden rounded-xl shadow-lg transition-all duration-300 ease-in-out sm:h-48 hover:-translate-y-2 hover:scale-105 hover:shadow-xl"
   >
     <NuxtLink :href="link" :target="external ? '_blank' : '_self'" class="block h-full">
       <img
         :src="image"
         :alt="title"
-        class="h-44 w-full object-cover transition-transform duration-300 hover:scale-110"
+        class="h-48 w-full object-cover transition-transform duration-300 hover:scale-110"
       />
 
       <div
-        class="absolute inset-x-0 bottom-0 flex h-12 items-center justify-between bg-DarkBlue px-4"
+        class="absolute inset-x-0 bottom-0 flex h-10 items-center justify-between bg-DarkBlue px-4"
       >
         <h2
           class="truncate text-base font-bold text-white transition-all duration-300 group-hover:text-lg sm:text-sm"

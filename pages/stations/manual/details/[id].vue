@@ -87,18 +87,18 @@
       </DataTable>
       <p v-else class="text-center text-lg">No data available for this station.</p>
     </div>
-    <div>
-      <div class="mb-4">
-        <span class="p-float-label flex">
+    <div class="w-full rounded-lg bg-white p-6 shadow-md mt-12">
+      <div class="my-16">
+        <span class="p-float-label flex gap-4 items-center">
+          <label for="paramSelector">Select Parameter</label>
           <Select
             v-model="selectedParam" checkmark
             :options="availableParams"
             optionLabel="label"
             optionValue="value"
             inputId="paramSelector"
-            class="!w-40"
+            class="!w-40 p-inputtext-xs !border-2 !border-gray-300 !bg-gray-100 !text-black"
           />
-          <label for="paramSelector">Select Parameter</label>
         </span>
       </div>
 
@@ -113,10 +113,10 @@
 import { use } from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import { LineChart } from 'echarts/charts';
-import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components';
+import { GridComponent, TooltipComponent, LegendComponent, DataZoomComponent, ToolboxComponent } from 'echarts/components';
 import VChart from 'vue-echarts';
 
-use([CanvasRenderer, LineChart, GridComponent, TooltipComponent, LegendComponent]);
+use([CanvasRenderer, LineChart, GridComponent, TooltipComponent, LegendComponent, DataZoomComponent, ToolboxComponent]);
 
 const route = useRoute();
 const stationData = useStationData();
@@ -196,6 +196,26 @@ const chartOption = computed(() => {
   const values = stdata.value.map((item) => item[selectedParam.value]);
 
   return {
+    toolbox: {
+      feature: {
+        dataZoom: {
+          yAxisIndex: 'none'
+        },
+        restore: {},
+        saveAsImage: {}
+      }
+    },
+    dataZoom: [
+      {
+        type: 'inside',
+        start: 0,
+        end: 100
+      },
+      {
+        start: 0,
+        end: 100
+      }
+    ],
     xAxis: {
       type: 'category',
       data: dates
@@ -207,7 +227,10 @@ const chartOption = computed(() => {
       {
         data: values,
         type: 'line',
-        smooth: true
+        smooth: true,
+        lineStyle: {
+          width: 2
+        }
       }
     ],
     tooltip: {
@@ -219,7 +242,19 @@ const chartOption = computed(() => {
 provide(THEME_KEY, 'light');
 </script>
 
-<style scoped>
+<style>
+.p-select-label {
+  @apply !bg-gray-100 !text-black;
+}
+.p-select-list {
+  @apply !bg-gray-100 !text-black;
+}
+.p-select-option {
+  @apply !bg-gray-100 !text-black hover:!bg-gray-200;
+}
+.p-select-option-check-icon {
+  @apply !text-black;
+}
 .p-datatable-thead {
   @apply !bg-DarkBlue !text-white;
 }
@@ -275,7 +310,7 @@ provide(THEME_KEY, 'light');
 }
 
 .chart {
-  height: 400px;
+  height: 500px;
   width: 100%;
 }
 </style>

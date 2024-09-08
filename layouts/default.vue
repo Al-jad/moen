@@ -6,7 +6,7 @@
           <template #start>
             <NuxtLink
               href="/"
-              class="flex items-center transition-opacity duration-300 hover:opacity-80"
+              class="flex items-center transition-opacity duration-300 hover:opacity-60"
             >
               <div class="mr-4">
                 <img
@@ -16,7 +16,8 @@
                 />
               </div>
               <div>
-                <h1 class="text-xl font-semibold sm:text-lg">Ministry of Environment</h1>
+                <h1 class="text-xl font-semibold sm:text-base">Ministry of Environment</h1>
+                <p class="text-sm hidden sm:block">Republic of Iraq</p>
               </div>
             </NuxtLink>
           </template>
