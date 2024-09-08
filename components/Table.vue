@@ -6,7 +6,7 @@
     <DataTable
       :value="value"
       class="text-nowrap !bg-DarkBlue"
-      :rows="3"
+      :rows="rows"
       :paginator="true"
       @row-click="onRowClick"
     >
@@ -71,6 +71,7 @@ const props = defineProps({
   }
 });
 
+const rows = ref(20);
 const getWQIClass = (wqi) => {
   if (wqi >= 95) return 'excellent';
   if (wqi >= 80) return 'good';
@@ -92,9 +93,6 @@ const formatDate = (dateString) => {
   return date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
 };
 
-const sortedValue = computed(() => {
-  return [...props.value].sort((a, b) => b.wqi - a.wqi);
-});
 
 const onRowClick = (event) => {
   const stationId = event.data.station.id;

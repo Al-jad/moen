@@ -21,7 +21,7 @@
     >
       <div class="min-w-[150px] flex-1">
         <label for="city-select" class="mb-2 block text-sm font-semibold text-gray-700">
-          City:
+          Governorate:
         </label>
         <MultiSelect
           id="city-select"
@@ -29,7 +29,7 @@
           :options="cities"
           optionLabel="name"
           optionValue="city"
-          placeholder="Choose governorates"
+          placeholder="Governorates"
           @change="updateStations"
           class="p-inputtext-xs w-full !border-2 !border-gray-300 !bg-white"
           :showToggleAll="false"
@@ -58,7 +58,7 @@
           :options="stations"
           optionLabel="name"
           optionValue="id"
-          placeholder="Choose stations"
+          placeholder="Stations"
           :disabled="selectedCities.length === 0"
           class="p-inputtext-xs w-full !border-2 !border-gray-300 !bg-white"
           :showToggleAll="false"
