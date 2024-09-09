@@ -42,52 +42,9 @@
         </Menubar>
       </div>
     </header>
-    <main class="flex-grow">
+    <main>
       <slot />
     </main>
-    <footer class="bg-DarkBlue py-8 text-white">
-      <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
-          <div>
-            <h3 class="mb-4 text-lg font-semibold">Ministry of Environment</h3>
-            <p class="text-sm">Republic of Iraq</p>
-          </div>
-          <div>
-            <h3 class="mb-4 text-lg font-semibold">Quick Links</h3>
-            <ul class="space-y-2 text-sm">
-              <li>
-                <NuxtLink to="/" class="transition-colors duration-300 hover:text-gray-300">
-                  Home
-                </NuxtLink>
-              </li>
-              <li>
-                <NuxtLink
-                  to="/water-quality"
-                  class="transition-colors duration-300 hover:text-gray-300"
-                >
-                  Water Quality
-                </NuxtLink>
-              </li>
-              <li>
-                <NuxtLink to="/" class="transition-colors duration-300 hover:text-gray-300">
-                  About Us
-                </NuxtLink>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="mb-4 text-lg font-semibold">Contact Us</h3>
-            <p class="mb-2 text-sm">
-              Email:
-              <a href="mailto:info@moen.gov.iq" class="hover:underline">info@moen.gov.iq</a>
-            </p>
-            <p class="text-sm">Phone: +964 123 456 789</p>
-          </div>
-        </div>
-        <div class="mt-8 text-center text-sm">
-          <p>&copy; {{ new Date().getFullYear() }} Ministry of Environment. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
+    <Footer/>
   </div>
 </template>

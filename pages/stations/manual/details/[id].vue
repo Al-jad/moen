@@ -1,13 +1,14 @@
 <template>
   <div class="container mx-auto px-4 py-8">
+    <NuxtLink to="/water-quality" class="flex items-center mb-4 text-blue-500 hover:underline">
+      <Icon name="mdi:arrow-left" class="mr-1" />
+      Back to Water Quality
+    </NuxtLink>
     <div class="mb-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <Icon name="fluent:water-16-filled" class="text-3xl text-blue-500" />
         <h1 class="mr-2 text-2xl font-bold text-black">Water Quality Monitoring Data</h1>
       </div>
-      <!-- <NuxtLink href="/water-quality" class="text-blue-500 hover:underline">
-        Back to Water Quality
-      </NuxtLink> -->
     </div>
 
     <div v-if="isLoading" class="text-center">
@@ -32,35 +33,35 @@
         City:
         {{ stdata.station?.city || 'N/A' }}
       </h2>
-      <div class=" flex flex-row items-center">
+      <div class="flex flex-row items-center">
         <p class="mr-2 text-lg font-semibold">Average Water Quality Index:</p>
         <div :class="['wqi-cell', getWQIClass(averageWQI)]">
           <span class="wqi-value font-semibold">{{ averageWQI }}</span>
           <span class="wqi-description font-semibold">{{ getWQIDescription(averageWQI) }}</span>
         </div>
       </div>
-      <div class="mb-8 flex items-center justify-between">
-        <div class="min-w-[300px] flex-1">
-          <div class="mt-6 flex items-center gap-3">
-            <FloatLabel>
+      <div class="mb-8">
+        <div class="min-w-[300px]">
+          <div class="mt-6 flex flex-row gap-4 sm:flex-col sm:gap-2">
+            <FloatLabel class="m-auto w-[50%] sm:w-full">
               <DatePicker
                 id="date-from"
                 v-model="selectedDateFrom"
                 :showIcon="true"
                 dateFormat="dd/mm/yy"
-                class="p-inputtext-sm flex-1"
+                class="p-inputtext-sm w-full sm:w-full"
               />
               <label for="date-from" class="block px-2 text-sm font-semibold !text-gray-700">
                 From
               </label>
             </FloatLabel>
-            <FloatLabel>
+            <FloatLabel class="m-auto w-[50%] sm:w-full">
               <DatePicker
                 id="date-to"
                 v-model="selectedDateTo"
                 :showIcon="true"
                 dateFormat="dd/mm/yy"
-                class="p-inputtext-sm flex-1"
+                class="p-inputtext-sm w-full sm:w-full"
               />
               <label for="date-to" class="block px-2 text-sm font-semibold !text-gray-700">
                 To
@@ -70,12 +71,15 @@
               label="Reset"
               icon="pi pi-refresh"
               @click="resetDatePicker"
-              class="p-button-sm p-button-secondary"
+              class="p-button-sm p-button-secondary h-10 m-auto w-[30%] !bg-DarkBlue !text-white transition-colors duration-300 hover:!bg-DarkNavy sm:m-auto sm:!w-[60%]"
             />
           </div>
         </div>
       </div>
-      <div v-if="filteredData.length === 0 && selectedDateFrom && selectedDateTo" class="mb-4 text-center text-red-500">
+      <div
+        v-if="filteredData.length === 0 && selectedDateFrom && selectedDateTo"
+        class="mb-4 text-center text-red-500"
+      >
         No data available for the selected date range.
       </div>
       <DataTable
@@ -108,15 +112,15 @@
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
         >
           <template #header>
-            <div class="flex">
-              <p class="m-auto text-base font-semibold">WQI</p>
+            <div class="flex items-center justify-center">
+              <p class="ml-4 text-base font-semibold">WQI</p>
             </div>
           </template>
           <template #body="slotProps">
             <div
               v-if="slotProps.data.wqi"
               :class="['wqi-cell', getWQIClass(slotProps.data.wqi)]"
-              class="ml-10 inline-flex"
+              class="inline-flex"
             >
               <span class="wqi-value">{{ slotProps.data.wqi }}</span>
               <span class="wqi-description">{{ getWQIDescription(slotProps.data.wqi) }}</span>
@@ -141,7 +145,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">Temp</p>
-              <div class="text-sm">(°C)</div>
+              <div class="text-sm">( °C )</div>
             </div>
           </template>
           <template #body="slotProps">{{ slotProps.data.temp }} °C</template>
@@ -153,7 +157,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">DO2</p>
-              <div class="text-sm">(mg / L)</div>
+              <div class="text-sm">( mg / L )</div>
             </div>
           </template>
           <template #body="slotProps">{{ slotProps.data.dO2 }} mg/L</template>
@@ -165,7 +169,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">BOD5</p>
-              <div class="text-sm">(mg / L)</div>
+              <div class="text-sm">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -176,7 +180,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">PO4</p>
-              <div class="text-sm">(mg / L)</div>
+              <div class="text-sm">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -187,7 +191,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">NO3</p>
-              <div class="text-sm">(mg/L)</div>
+              <div class="text-sm">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -198,7 +202,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">Ca</p>
-              <div class="text-sm">(mg / L)</div>
+              <div class="text-sm">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -209,7 +213,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">Mg</p>
-              <div class="text-sm">(mg / L)</div>
+              <div class="text-sm">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -220,7 +224,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">T. H.</p>
-              <div class="text-sm">(mg / L)</div>
+              <div class="text-sm">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -228,7 +232,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">K</p>
-              <div class="text-sm">(mg / L)</div>
+              <div class="text-sm">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -239,7 +243,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">Na</p>
-              <div class="text-sm">(mg / L)</div>
+              <div class="text-sm">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -250,7 +254,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">SO4</p>
-              <div class="text-sm">(mg /L)</div>
+              <div class="text-sm">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -261,7 +265,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">Cl</p>
-              <div class="text-sm">(mg / L)</div>
+              <div class="text-sm">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -272,7 +276,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">TDS</p>
-              <div class="text-sm">(mg / L)</div>
+              <div class="text-sm">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -283,7 +287,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">EC</p>
-              <div class="text-sm">(μS / cm)</div>
+              <div class="text-sm">( μS / cm )</div>
             </div>
           </template>
         </Column>
@@ -294,7 +298,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">Alk.</p>
-              <div class="text-sm">(mg / L)</div>
+              <div class="text-sm">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -316,7 +320,7 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">OnG</p>
-              <div class="text-sm">(mg/L)</div>
+              <div class="text-sm">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -327,12 +331,14 @@
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold">Turb</p>
-              <div class="text-sm">(NTU)</div>
+              <div class="text-sm">( NTU )</div>
             </div>
           </template>
         </Column>
       </DataTable>
-      <p v-else-if="!selectedDateFrom || !selectedDateTo" class="text-center text-lg">No data available for this station.</p>
+      <p v-else-if="!selectedDateFrom || !selectedDateTo" class="text-center text-lg">
+        No data available for this station.
+      </p>
     </div>
     <div class="mt-6 w-full rounded-lg bg-white p-6 shadow-md">
       <div class="my-8">
@@ -345,7 +351,7 @@
             optionLabel="label"
             optionValue="value"
             inputId="paramSelector"
-            class="p-inputtext-xs !w-40 !border-2 !border-gray-300 !bg-gray-100 !text-black"
+            class="p-inputtext-xs !w-56 !border-2 !border-gray-300 !bg-gray-100 !text-black"
           />
         </span>
       </div>
@@ -543,5 +549,84 @@ provide(THEME_KEY, 'light');
 </script>
 
 <style>
-/* ... (styles remain unchanged) ... */
+.p-select-label {
+  @apply !bg-gray-100 !text-black;
+}
+.p-select-list {
+  @apply !bg-gray-100 !text-black;
+}
+.p-select-option {
+  @apply !bg-gray-100 !text-black hover:!bg-gray-200;
+}
+.p-select-option-check-icon {
+  @apply !text-black;
+}
+.p-datatable-thead {
+  @apply !bg-DarkBlue !text-white;
+}
+.wqi-cell {
+  @apply flex h-16 w-16 flex-col items-center justify-center rounded-full shadow-sm;
+}
+
+.wqi-value {
+  @apply text-sm font-bold;
+}
+
+.wqi-description {
+  @apply text-xs;
+}
+
+.excellent {
+  @apply bg-blue-500 text-white;
+}
+.good {
+  @apply bg-green-500 text-white;
+}
+.fair {
+  @apply bg-yellow-500 text-black;
+}
+.poor {
+  @apply bg-orange-500 text-white;
+}
+.very-poor {
+  @apply bg-red-500 text-white;
+}
+
+.p-datatable tr {
+  @apply cursor-pointer !bg-DarkBlue;
+}
+.p-paginator {
+  @apply !bg-DarkBlue !text-white;
+}
+
+.p-datatable .p-datatable-tbody > tr.p-row-even {
+  @apply !bg-gray-100 !text-black;
+}
+.p-datatable .p-datatable-tbody > tr.p-row-odd {
+  @apply !bg-gray-200 !text-black;
+}
+.p-datatable .p-datatable-tbody > tr:not(.p-datatable-empty-message):hover {
+  @apply !bg-gray-300 !text-black;
+}
+.p-paginator-rpp-dropdown {
+  @apply border-white !bg-DarkNavy !text-white;
+}
+.p-select-overlay {
+  @apply border-white !bg-DarkNavy !text-white hover:!bg-DarkBlue;
+}
+
+.chart {
+  height: 500px;
+  width: 100%;
+}
+
+.p-datepicker-input {
+  @apply !border-2 !border-gray-300 !bg-white !text-black;
+}
+.p-datepicker-dropdown {
+  @apply !border-2 !border-gray-300 !bg-gray-200;
+}
+.p-datepicker-dropdown .p-icon {
+  @apply text-black;
+}
 </style>

@@ -21,6 +21,9 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: "MOEN | Online Data App",
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/assets/img/Fakhar.png' }
+      ]
     },
   },
   pinia: {

@@ -115,6 +115,12 @@
               To
             </label>
           </FloatLabel>
+          <Button
+            label="Reset"
+            icon="pi pi-refresh"
+            @click="resetDatePicker"
+            class="p-button-sm p-button-secondary !h-10 !bg-DarkBlue !text-white"
+          />
         </div>
       </div>
       <!-- <div class="max-w-[300px] flex-1">
@@ -210,6 +216,11 @@ const toggleAllStations = () => {
     : [];
 };
 
+const resetDatePicker = () => {
+  selectedDateFrom.value = null;
+  selectedDateTo.value = null;
+};
+
 const filteredData = computed(() => {
   if (!manualStationStore.data?.data) return [];
   let filtered = manualStationStore.data.data;
@@ -287,6 +298,10 @@ const filteredMapStations = computed(() => {
 }
 .p-selectbutton .p-togglebutton-checked {
   @apply !text-white;
+}
+
+.p-selectbutton .p-togglebutton-checked::before {
+  @apply !bg-DarkBlue;
 }
 .p-chip-remove-icon {
   @apply !text-black;

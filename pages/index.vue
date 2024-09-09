@@ -16,25 +16,25 @@
         <Content
           title="Water Quality"
           description="Water quality is a critical environmental determinant that affects human health and ecosystems. It encompasses various parameters such as pH, dissolved oxygen, nutrients, and contaminants."
-          image="/assets/img/water-quality.jpg"
+          image="/assets/img/wqi.jpg"
           alt="Water Quality"
         />
         <Content
           title="Air Quality"
           description="Air quality is a key environmental determinant influencing respiratory health and climate. It involves measuring pollutants like particulate matter, ozone, and nitrogen dioxide in the atmosphere."
-          image="/assets/img/ambient-air.jpg"
+          image="/assets/img/air-quality.jpg"
           alt="Air Quality"
         />
         <Content
           title="Soil Contamination"
           description="Soil contamination is an important environmental determinant affecting agriculture and ecosystem health. It involves the presence of chemicals or other alterations in the natural soil environment."
-          image="/assets/img/heavy-metals.jpeg"
+          image="/assets/img/soil.jpg"
           alt="Soil Contamination"
         />
         <Content
           title="Biodiversity"
           description="Biodiversity is a crucial environmental determinant that indicates ecosystem health. It refers to the variety of plant and animal life in a particular habitat, including endangered species and habitat preservation."
-          image="/assets/img/emissions.jpeg"
+          image="/assets/img/earth.jpg"
           alt="Biodiversity"
         />
       </div>
