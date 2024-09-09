@@ -1,5 +1,5 @@
 <template>
-  <div class="grid container grid-cols-1 sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center p-4 sm:p-6 sm:mb-0 sm:pb-0 md:p-8">
+  <div class="grid container grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 justify-items-center p-4 sm:p-6 sm:mb-0 sm:pb-0 md:p-8">
     <MyCard
       v-for="item in cardItems"
       :key="item.id"

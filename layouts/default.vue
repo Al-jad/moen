@@ -15,7 +15,7 @@
                   alt="Ministry of Environment Logo"
                 />
               </div>
-              <div>
+              <div class="text-white">
                 <h1 class="text-xl font-semibold sm:text-base">Ministry of Environment</h1>
                 <p class="text-sm hidden sm:block">Republic of Iraq</p>
               </div>

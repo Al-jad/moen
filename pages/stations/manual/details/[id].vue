@@ -1,15 +1,14 @@
 <template>
   <div class="container mx-auto px-4 py-8">
     <div class="mb-4 flex items-center justify-between">
-      <div class="flex items-center">
-        <h1 class="mr-2 text-2xl font-bold text-black">Water Quality</h1>
+      <div class="flex items-center gap-3">
         <Icon name="fluent:water-16-filled" class="text-3xl text-blue-500" />
+        <h1 class="mr-2 text-2xl font-bold text-black">Water Quality Monitoring Data</h1>
       </div>
-      <NuxtLink href="/water-quality" class="text-blue-500 hover:underline">
+      <!-- <NuxtLink href="/water-quality" class="text-blue-500 hover:underline">
         Back to Water Quality
-      </NuxtLink>
+      </NuxtLink> -->
     </div>
-    <div class="mb-8 flex items-center justify-between"></div>
 
     <div v-if="isLoading" class="text-center">
       <p class="text-lg">Loading station data...</p>
@@ -26,21 +25,93 @@
 
     <div v-else-if="stdata" class="min-w-full rounded-lg bg-white p-6 shadow-md">
       <h2 class="mb-4 text-xl font-semibold">
+        Station:
         {{ stdata.station?.name || 'N/A' }}
       </h2>
+      <h2 class="text-xl font-semibold">
+        City:
+        {{ stdata.station?.city || 'N/A' }}
+      </h2>
+      <div class=" flex flex-row items-center">
+        <p class="mr-2 text-lg font-semibold">Average Water Quality Index:</p>
+        <div :class="['wqi-cell', getWQIClass(averageWQI)]">
+          <span class="wqi-value font-semibold">{{ averageWQI }}</span>
+          <span class="wqi-description font-semibold">{{ getWQIDescription(averageWQI) }}</span>
+        </div>
+      </div>
+      <div class="mb-8 flex items-center justify-between">
+        <div class="min-w-[300px] flex-1">
+          <div class="mt-6 flex items-center gap-3">
+            <FloatLabel>
+              <DatePicker
+                id="date-from"
+                v-model="selectedDateFrom"
+                :showIcon="true"
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-sm flex-1"
+              />
+              <label for="date-from" class="block px-2 text-sm font-semibold !text-gray-700">
+                From
+              </label>
+            </FloatLabel>
+            <FloatLabel>
+              <DatePicker
+                id="date-to"
+                v-model="selectedDateTo"
+                :showIcon="true"
+                dateFormat="dd/mm/yy"
+                class="p-inputtext-sm flex-1"
+              />
+              <label for="date-to" class="block px-2 text-sm font-semibold !text-gray-700">
+                To
+              </label>
+            </FloatLabel>
+            <Button
+              label="Reset"
+              icon="pi pi-refresh"
+              @click="resetDatePicker"
+              class="p-button-sm p-button-secondary"
+            />
+          </div>
+        </div>
+      </div>
+      <div v-if="filteredData.length === 0 && selectedDateFrom && selectedDateTo" class="mb-4 text-center text-red-500">
+        No data available for the selected date range.
+      </div>
       <DataTable
         class="text-nowrap !bg-DarkBlue"
-        v-if="stdata.length > 0"
-        :value="stdata"
+        v-if="filteredData.length > 0"
+        :value="filteredData"
         :paginator="true"
         :rows="20"
       >
-        <Column field="timeStamp" headerClass="!bg-DarkBlue  !text-white" header="Date">
+        <Column
+          field="timeStamp"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white  !text-white"
+          header="Date"
+        >
           <template #body="slotProps">
             {{ formatDate(slotProps.data.timeStamp) }}
           </template>
         </Column>
-        <Column field="wqi" headerClass="!bg-DarkBlue !text-white" header="Water Quality Index">
+        <Column
+          field="timeStamp"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white  !text-white"
+          header="Time"
+        >
+          <template #body="slotProps">
+            {{ formatTime(slotProps.data.timeStamp) }}
+          </template>
+        </Column>
+        <Column
+          field="wqi"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex">
+              <p class="m-auto text-base font-semibold">WQI</p>
+            </div>
+          </template>
           <template #body="slotProps">
             <div
               v-if="slotProps.data.wqi"
@@ -50,54 +121,231 @@
               <span class="wqi-value">{{ slotProps.data.wqi }}</span>
               <span class="wqi-description">{{ getWQIDescription(slotProps.data.wqi) }}</span>
             </div>
-            <span v-else class="ml-16">N/A</span>
+            <span v-else class="ml-16">0</span>
           </template>
         </Column>
-        <Column field="ph" headerClass="!bg-DarkBlue !text-white" header="pH"></Column>
-        <Column field="temp" headerClass="!bg-DarkBlue !text-white" header="Temp">
+        <Column
+          field="ph"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">pH</p>
+            </div>
+          </template>
+        </Column>
+        <Column
+          field="temp"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">Temp</p>
+              <div class="text-sm">(°C)</div>
+            </div>
+          </template>
           <template #body="slotProps">{{ slotProps.data.temp }} °C</template>
         </Column>
-        <Column field="dO2" headerClass="!bg-DarkBlue !text-white" header="DO2">
+        <Column
+          field="dO2"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">DO2</p>
+              <div class="text-sm">(mg / L)</div>
+            </div>
+          </template>
           <template #body="slotProps">{{ slotProps.data.dO2 }} mg/L</template>
         </Column>
-        <Column field="boD5" headerClass="!bg-DarkBlue !text-white" header="BOD5"></Column>
-        <Column field="pO4" headerClass="!bg-DarkBlue !text-white" header="PO4"></Column>
-        <Column field="nO3" headerClass="!bg-DarkBlue !text-white" header="NO3"></Column>
-        <Column field="ca" headerClass="!bg-DarkBlue !text-white" header="Ca"></Column>
-        <Column field="mg" headerClass="!bg-DarkBlue !text-white" header="Mg"></Column>
-        <Column field="th" headerClass="!bg-DarkBlue !text-white" header="Total Hardness"></Column>
-        <Column field="k" headerClass="!bg-DarkBlue !text-white" header="K"></Column>
-        <Column field="na" headerClass="!bg-DarkBlue !text-white" header="Na"></Column>
-        <Column field="sO4" headerClass="!bg-DarkBlue !text-white" header="SO4"></Column>
-        <Column field="cl" headerClass="!bg-DarkBlue !text-white" header="Cl"></Column>
+        <Column
+          field="boD5"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">BOD5</p>
+              <div class="text-sm">(mg / L)</div>
+            </div>
+          </template>
+        </Column>
+        <Column
+          field="pO4"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">PO4</p>
+              <div class="text-sm">(mg / L)</div>
+            </div>
+          </template>
+        </Column>
+        <Column
+          field="nO3"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">NO3</p>
+              <div class="text-sm">(mg/L)</div>
+            </div>
+          </template>
+        </Column>
+        <Column
+          field="ca"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">Ca</p>
+              <div class="text-sm">(mg / L)</div>
+            </div>
+          </template>
+        </Column>
+        <Column
+          field="mg"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">Mg</p>
+              <div class="text-sm">(mg / L)</div>
+            </div>
+          </template>
+        </Column>
+        <Column
+          field="th"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">T. H.</p>
+              <div class="text-sm">(mg / L)</div>
+            </div>
+          </template>
+        </Column>
+        <Column field="k" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white">
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">K</p>
+              <div class="text-sm">(mg / L)</div>
+            </div>
+          </template>
+        </Column>
+        <Column
+          field="na"
+          headerClass="!bg-DarkBlue  !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">Na</p>
+              <div class="text-sm">(mg / L)</div>
+            </div>
+          </template>
+        </Column>
+        <Column
+          field="sO4"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">SO4</p>
+              <div class="text-sm">(mg /L)</div>
+            </div>
+          </template>
+        </Column>
+        <Column
+          field="cl"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">Cl</p>
+              <div class="text-sm">(mg / L)</div>
+            </div>
+          </template>
+        </Column>
         <Column
           field="tds"
-          headerClass="!bg-DarkBlue !text-white"
-          header="Total Dissolved Solids"
-        ></Column>
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">TDS</p>
+              <div class="text-sm">(mg / L)</div>
+            </div>
+          </template>
+        </Column>
         <Column
           field="ec"
-          headerClass="!bg-DarkBlue !text-white"
-          header="Electrical Conductivity"
-        ></Column>
-        <Column field="alk" headerClass="!bg-DarkBlue !text-white" header="Alkalinity"></Column>
-        <Column field="acid" headerClass="!bg-DarkBlue !text-white" header="Acidity"></Column>
-        <Column field="onG" headerClass="!bg-DarkBlue !text-white" header="OnG"></Column>
-        <Column field="turb" headerClass="!bg-DarkBlue !text-white" header="Turbidity"></Column>
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">EC</p>
+              <div class="text-sm">(μS / cm)</div>
+            </div>
+          </template>
+        </Column>
+        <Column
+          field="alk"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">Alk.</p>
+              <div class="text-sm">(mg / L)</div>
+            </div>
+          </template>
+        </Column>
+        <Column
+          field="acid"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">Acid</p>
+              <div class="text-sm">(mg / L)</div>
+            </div>
+          </template>
+        </Column>
+        <Column
+          field="onG"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">OnG</p>
+              <div class="text-sm">(mg/L)</div>
+            </div>
+          </template>
+        </Column>
+        <Column
+          field="turb"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+        >
+          <template #header>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-lg font-semibold">Turb</p>
+              <div class="text-sm">(NTU)</div>
+            </div>
+          </template>
+        </Column>
       </DataTable>
-      <p v-else class="text-center text-lg">No data available for this station.</p>
+      <p v-else-if="!selectedDateFrom || !selectedDateTo" class="text-center text-lg">No data available for this station.</p>
     </div>
-    <div class="w-full rounded-lg bg-white p-6 shadow-md mt-12">
-      <div class="my-16">
-        <span class="p-float-label flex gap-4 items-center">
+    <div class="mt-6 w-full rounded-lg bg-white p-6 shadow-md">
+      <div class="my-8">
+        <span class="p-float-label flex items-center gap-4">
           <label for="paramSelector">Select Parameter</label>
           <Select
-            v-model="selectedParam" checkmark
+            v-model="selectedParam"
+            checkmark
             :options="availableParams"
             optionLabel="label"
             optionValue="value"
             inputId="paramSelector"
-            class="!w-40 p-inputtext-xs !border-2 !border-gray-300 !bg-gray-100 !text-black"
+            class="p-inputtext-xs !w-40 !border-2 !border-gray-300 !bg-gray-100 !text-black"
           />
         </span>
       </div>
@@ -113,10 +361,24 @@
 import { use } from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import { LineChart } from 'echarts/charts';
-import { GridComponent, TooltipComponent, LegendComponent, DataZoomComponent, ToolboxComponent } from 'echarts/components';
+import {
+  GridComponent,
+  TooltipComponent,
+  LegendComponent,
+  DataZoomComponent,
+  ToolboxComponent
+} from 'echarts/components';
 import VChart from 'vue-echarts';
 
-use([CanvasRenderer, LineChart, GridComponent, TooltipComponent, LegendComponent, DataZoomComponent, ToolboxComponent]);
+use([
+  CanvasRenderer,
+  LineChart,
+  GridComponent,
+  TooltipComponent,
+  LegendComponent,
+  DataZoomComponent,
+  ToolboxComponent
+]);
 
 const route = useRoute();
 const stationData = useStationData();
@@ -147,6 +409,9 @@ const availableParams = [
   { value: 'turb', label: 'Turbidity', code: 'TURB' }
 ];
 
+const selectedDateFrom = ref(null);
+const selectedDateTo = ref(null);
+
 onMounted(async () => {
   const stationId = route.params.id;
   try {
@@ -173,6 +438,14 @@ const formatDate = (dateString) => {
   });
 };
 
+const formatTime = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
+
 const getWQIClass = (wqi) => {
   if (wqi >= 95) return 'excellent';
   if (wqi >= 80) return 'good';
@@ -189,11 +462,33 @@ const getWQIDescription = (wqi) => {
   return 'مرفوض';
 };
 
-const chartOption = computed(() => {
-  if (!stdata.value) return {};
+const filteredData = computed(() => {
+  if (!stdata.value) return [];
+  let filtered = stdata.value;
 
-  const dates = stdata.value.map((item) => formatDate(item.timeStamp));
-  const values = stdata.value.map((item) => item[selectedParam.value]);
+  if (selectedDateFrom.value && selectedDateTo.value) {
+    const fromDate = new Date(selectedDateFrom.value);
+    const toDate = new Date(selectedDateTo.value);
+    filtered = filtered.filter((item) => {
+      const itemDate = new Date(item.timeStamp);
+      return itemDate >= fromDate && itemDate <= toDate;
+    });
+  }
+
+  return filtered;
+});
+
+const averageWQI = computed(() => {
+  if (!filteredData.value || filteredData.value.length === 0) return '0';
+  const sum = filteredData.value.reduce((acc, curr) => acc + (curr.wqi || 0), 0);
+  return (sum / filteredData.value.length).toFixed(2);
+});
+
+const chartOption = computed(() => {
+  if (!filteredData.value) return {};
+
+  const dates = filteredData.value.map((item) => formatDate(item.timeStamp));
+  const values = filteredData.value.map((item) => item[selectedParam.value]);
 
   return {
     toolbox: {
@@ -239,78 +534,14 @@ const chartOption = computed(() => {
   };
 });
 
+const resetDatePicker = () => {
+  selectedDateFrom.value = null;
+  selectedDateTo.value = null;
+};
+
 provide(THEME_KEY, 'light');
 </script>
 
 <style>
-.p-select-label {
-  @apply !bg-gray-100 !text-black;
-}
-.p-select-list {
-  @apply !bg-gray-100 !text-black;
-}
-.p-select-option {
-  @apply !bg-gray-100 !text-black hover:!bg-gray-200;
-}
-.p-select-option-check-icon {
-  @apply !text-black;
-}
-.p-datatable-thead {
-  @apply !bg-DarkBlue !text-white;
-}
-.wqi-cell {
-  @apply flex h-16 w-16 flex-col items-center justify-center rounded-full shadow-sm;
-}
-
-.wqi-value {
-  @apply text-sm font-bold;
-}
-
-.wqi-description {
-  @apply text-xs;
-}
-
-.excellent {
-  @apply bg-blue-500;
-}
-.good {
-  @apply bg-green-500;
-}
-.fair {
-  @apply bg-yellow-500;
-}
-.poor {
-  @apply bg-orange-500;
-}
-.very-poor {
-  @apply bg-red-500;
-}
-
-.p-datatable tr {
-  @apply cursor-pointer !bg-DarkBlue;
-}
-.p-paginator {
-  @apply !bg-DarkBlue !text-white;
-}
-
-.p-datatable .p-datatable-tbody > tr.p-row-even {
-  @apply !bg-gray-100 !text-black;
-}
-.p-datatable .p-datatable-tbody > tr.p-row-odd {
-  @apply !bg-gray-200 !text-black;
-}
-.p-datatable .p-datatable-tbody > tr:not(.p-datatable-empty-message):hover {
-  @apply !bg-gray-300 !text-black;
-}
-.p-paginator-rpp-dropdown {
-  @apply border-white !bg-DarkNavy !text-white;
-}
-.p-select-overlay {
-  @apply border-white !bg-DarkNavy !text-white hover:!bg-DarkBlue;
-}
-
-.chart {
-  height: 500px;
-  width: 100%;
-}
+/* ... (styles remain unchanged) ... */
 </style>

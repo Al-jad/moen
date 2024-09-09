@@ -1,39 +1,55 @@
 <template>
   <div class="container mx-auto">
     <div class="rounded-t-lg p-3 text-sm text-black">
-      Showing {{ Math.min(rows, value.length) }} of {{ value.length }} entries
+      Results :
     </div>
-    <DataTable
+    <DataTable removableSort
       :value="value"
       class="text-nowrap !bg-DarkBlue"
-      :rows="rows"
+      :rows="10"
       :paginator="true"
       @row-click="onRowClick"
+      :sortField="'station.externalId'"
+      :sortOrder="1"
     >
+      <ColumnGroup type="header">
+        <Row>
+          <Column header="Station Info" :colspan="3" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
+          <Column header="Last Measurement" :colspan="3" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
+        </Row>
+        <Row>
+          <Column header="ID" :sortable="true" field="station.externalId" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
+          <Column header="Name" :sortable="true" field="station.name" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
+          <Column header="City" :sortable="true" field="station.city" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
+          <Column header="Water Quality Index" :sortable="true" field="wqi" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
+          <Column header="Date" :sortable="true" field="timeStamp" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
+          <Column header="Time" :sortable="true" field="timeStamp" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
+        </Row>
+      </ColumnGroup>
       <template #empty>
         <div class="m-0 bg-DarkBlue p-4 text-center text-white">No data available</div>
       </template>
       <Column
         field="station.externalId"
-        headerClass="!bg-DarkBlue rounded-tl-lg !text-white"
+        headerClass="!bg-DarkBlue !outline !outline-1 !outline-white rounded-tl-lg !text-white"
         header="ID"
         :sortable="true"
       ></Column>
       <Column
         field="station.name"
-        headerClass="!bg-DarkBlue !text-white"
+        headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
         header="Name"
         :sortable="true"
       ></Column>
       <Column
         field="station.city"
-        headerClass="!bg-DarkBlue !text-white"
+        headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
         header="City"
         :sortable="true"
       ></Column>
       <Column
         field="wqi"
-        headerClass="!bg-DarkBlue !text-white"
+        headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
         header="Water Quality Index"
         :sortable="true"
       >
@@ -46,7 +62,7 @@
       </Column>
       <Column
         field="timeStamp"
-        headerClass="!bg-DarkBlue !text-white rounded-tr-lg"
+        headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
         header="Date"
         :sortable="true"
       >
@@ -54,6 +70,21 @@
           {{ formatDate(slotProps.data.timeStamp) }}
         </template>
       </Column>
+      <Column
+        field="timeStamp"
+        headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white rounded-tr-lg"
+        header="Time"
+        :sortable="true"
+      >
+        <template #body="slotProps">
+          {{ formatTime(slotProps.data.timeStamp) }}
+        </template>
+      </Column>
+      <template #paginatorstart>
+        <div class="text-sm text-white">
+          Showing max 10 of {{ value.length }} entries
+        </div>
+      </template>
     </DataTable>
   </div>
 </template>
@@ -71,7 +102,6 @@ const props = defineProps({
   }
 });
 
-const rows = ref(20);
 const getWQIClass = (wqi) => {
   if (wqi >= 95) return 'excellent';
   if (wqi >= 80) return 'good';
@@ -93,6 +123,11 @@ const formatDate = (dateString) => {
   return date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
 };
 
+const formatTime = (dateString) => {
+  if (!dateString) return '12:00 PM';
+  const date = new Date(dateString);
+  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+};
 
 const onRowClick = (event) => {
   const stationId = event.data.station.id;
@@ -101,6 +136,9 @@ const onRowClick = (event) => {
 </script>
 
 <style>
+.p-datatable-sort-icon {
+    color: white !important;
+}
 .p-datatable tr {
   @apply !bg-DarkBlue cursor-pointer;
 }
@@ -137,10 +175,10 @@ const onRowClick = (event) => {
 }
 
 .p-datatable .p-datatable-tbody > tr.p-row-even {
-  @apply !bg-gray-100 !text-black;
+  @apply !bg-white !text-black;
 }
 .p-datatable .p-datatable-tbody > tr.p-row-odd {
-  @apply !bg-gray-200 !text-black;
+  @apply !bg-gray-100 !text-black;
 }
 .p-datatable .p-datatable-tbody > tr:not(.p-datatable-empty-message):hover {
   @apply !bg-gray-300 !text-black !cursor-pointer;

@@ -1,27 +1,29 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <div class="mb-8 flex flex-col items-center">
-      <div class="mb-4 flex w-full sm:flex-col justify-between items-center sm:justify-center">
-        <div class="flex items-center mb-4">
-          <h1 class="mr-2 text-2xl font-bold text-black">Water Quality</h1>
-          <Icon name="fluent:water-16-filled" class="text-3xl text-blue-500" />
+    <div class="mb-8 flex flex-col sm:items-start md:flex-row md:items-center md:justify-between">
+      <div class="mb-4 flex items-center justify-between md:mb-0">
+        <div class="flex items-center">
+          <Icon name="fluent:water-16-filled" class="mr-2 text-3xl text-blue-500" />
+          <h1 class="text-2xl font-bold text-black">Water Quality Monitoring Data</h1>
         </div>
-        <div class="sm:mt-4">
-          <SelectButton
-            v-model="viewMode"
-            :options="viewOptions"
-            @change="handleViewChange"
-            class="p-button-sm"
-          />
-        </div>
+      </div>
+      <div class="sm:hidden md:block">
+        <SelectButton v-model="viewMode" :options="viewOptions" @change="handleViewChange">
+          <template #option="slotProps">
+            <div class="flex items-center">
+              <Icon :name="slotProps.option === 'Data' ? 'mdi:table' : 'mdi:map'" class="mr-2" />
+              {{ slotProps.option }}
+            </div>
+          </template>
+        </SelectButton>
       </div>
     </div>
     <div
-      class="mb-10 flex flex-wrap items-center justify-center gap-6 rounded-lg bg-gray-300 p-6 shadow-md"
+      class="mb-10 flex flex-wrap items-center justify-center gap-6 rounded-lg bg-gray-300 p-6 shadow-md md:flex-nowrap"
     >
-      <div class="min-w-[150px] flex-1">
+      <div class="min-w-[150px] flex-1 md:flex-initial md:w-1/4">
         <label for="city-select" class="mb-2 block text-sm font-semibold text-gray-700">
-          Governorate:
+          City:
         </label>
         <MultiSelect
           id="city-select"
@@ -29,12 +31,18 @@
           :options="cities"
           optionLabel="name"
           optionValue="city"
-          placeholder="Governorates"
+          placeholder="Cities"
           @change="updateStations"
           class="p-inputtext-xs w-full !border-2 !border-gray-300 !bg-white"
           :showToggleAll="false"
           display="chip"
         >
+          <template #option="slotProps">
+            <div class="flex items-center justify-between">
+              <span>{{ slotProps.option.name }}</span>
+              <span class="ml-2 text-sm text-gray-500">({{ getStationCount(slotProps.option.city) }})</span>
+            </div>
+          </template>
           <template #header>
             <div class="bg-white p-1">
               <div
@@ -48,7 +56,7 @@
           </template>
         </MultiSelect>
       </div>
-      <div class="min-w-[150px] flex-1">
+      <div class="min-w-[150px] flex-1 md:flex-initial md:w-1/4">
         <label for="station-select" class="mb-2 block text-sm font-semibold text-gray-700">
           Station:
         </label>
@@ -70,45 +78,54 @@
                 @click="toggleAllStations"
                 class="cursor-pointer rounded-sm !bg-gray-100 p-2 text-black hover:!bg-gray-300"
               >
-                <Checkbox @change="toggleAllStations" v-model="allStationsSelected" :binary="true" />
+                <Checkbox
+                  @change="toggleAllStations"
+                  v-model="allStationsSelected"
+                  :binary="true"
+                />
                 <span class="ml-2">{{ allStationsSelected ? 'Deselect All' : 'Select All' }}</span>
               </div>
             </div>
           </template>
         </MultiSelect>
       </div>
-      <div class="min-w-[300px] flex-1" v-if="viewMode !== 'Map'">
-        <label for="date-range" class="mb-2 block text-sm font-semibold text-gray-700">
-          Date Range:
-        </label>
-        <div class="flex items-center gap-3">
-          <DatePicker
-            id="date-from"
-            v-model="selectedDateFrom"
-            :showIcon="true"
-            dateFormat="dd/mm/yy"
-            placeholder="From"
-            class="p-inputtext-sm flex-1"
-          />
-          <DatePicker
-            id="date-to"
-            v-model="selectedDateTo"
-            :showIcon="true"
-            dateFormat="dd/mm/yy"
-            placeholder="To"
-            class="p-inputtext-sm flex-1"
-          />
+      <div class="min-w-[300px] flex-1 md:flex-initial md:w-2/4" v-if="viewMode !== 'Map'">
+        <div class="mt-6 flex items-center gap-3 md:mt-6">
+          <FloatLabel class="flex-1">
+            <DatePicker
+              id="date-from"
+              v-model="selectedDateFrom"
+              :showIcon="true"
+              dateFormat="dd/mm/yy"
+              class="p-inputtext-sm w-full"
+            />
+            <label for="date-from" class="block px-2 text-sm font-semibold !text-gray-700">
+              From
+            </label>
+          </FloatLabel>
+          <FloatLabel class="flex-1">
+            <DatePicker
+              id="date-to"
+              v-model="selectedDateTo"
+              :showIcon="true"
+              dateFormat="dd/mm/yy"
+              class="p-inputtext-sm w-full"
+            />
+            <label for="date-to" class="block px-2 text-sm font-semibold !text-gray-700">
+              To
+            </label>
+          </FloatLabel>
         </div>
       </div>
-      <div class="max-w-[300px] flex-1">
+      <!-- <div class="max-w-[300px] flex-1">
         <label for="search" class="mb-2 block text-sm font-semibold text-gray-700">Search:</label>
         <InputText
           id="search"
           v-model="searchQuery"
           placeholder="Search by station name, city, or external ID"
-          class="p-inputtext-sm w-full !h-11 !border-2 !border-gray-300 !bg-white"
+          class="p-inputtext-sm !h-11 w-full !border-2 !border-gray-300 !bg-white"
         />
-      </div>
+      </div> -->
     </div>
     <Table
       v-if="viewMode === 'Data'"
@@ -116,6 +133,7 @@
       :paginator="true"
       :rows="10"
       :rowsPerPageOptions="[10, 20, 50]"
+      class="md:text-base"
     />
     <div v-else-if="viewMode === 'Map'" class="mt-12">
       <Map :stations="filteredMapStations" />
@@ -171,6 +189,10 @@ const updateStations = () => {
   }
 };
 
+const getStationCount = (city) => {
+  return manualDetailsStore.data.filter(item => item.city === city).length;
+};
+
 watch(selectedCities, () => {
   updateStations();
   allStationsSelected.value = selectedStations.value.length === stations.value.length;
@@ -220,12 +242,6 @@ const filteredData = computed(() => {
   return filtered;
 });
 
-const formatDate = (date) => {
-  const d = new Date(date);
-  const pad = (num) => num.toString().padStart(2, '0');
-  return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
-};
-
 const mapStations = computed(() => {
   if (!manualDetailsStore.data) {
     console.warn('manualDetailsStore.data is empty or undefined');
@@ -267,7 +283,7 @@ const filteredMapStations = computed(() => {
 
 <style>
 .p-selectbutton .p-togglebutton {
-  @apply !bg-gray-300 !text-black;
+  @apply !bg-gray-300 !text-black sm:min-w-[13.5rem];
 }
 .p-selectbutton .p-togglebutton-checked {
   @apply !text-white;
