@@ -1,13 +1,16 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <NuxtLink to="/water-quality" class="flex items-center mb-4 text-blue-500 hover:underline">
+    <NuxtLink
+      to="/water-quality"
+      class="mb-4 flex items-center text-blue-500 hover:underline sm:text-xs"
+    >
       <Icon name="mdi:arrow-left" class="mr-1" />
-      Back to Water Quality
+      Back to All Stations
     </NuxtLink>
     <div class="mb-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <Icon name="fluent:water-16-filled" class="text-3xl text-blue-500" />
-        <h1 class="mr-2 text-2xl font-bold text-black">Water Quality Monitoring Data</h1>
+        <Icon name="fluent:water-16-filled" class="text-3xl text-blue-500 sm:text-xl" />
+        <h1 class="mr-2 text-2xl font-bold text-black sm:text-lg">Water Quality Monitoring Data</h1>
       </div>
     </div>
 
@@ -24,25 +27,28 @@
       <span class="block sm:inline">{{ stationData.error }}</span>
     </div>
 
-    <div v-else-if="stdata" class="min-w-full rounded-lg bg-white p-6 shadow-md">
-      <h2 class="mb-4 text-xl font-semibold">
+    <div
+      v-else-if="stdata"
+      class="min-w-full rounded-lg bg-white p-6 text-lg font-semibold shadow-md sm:text-sm"
+    >
+      <h2 class="mb-4">
         Station:
-        {{ stdata.station?.name || 'N/A' }}
+        {{ stationData.stationName || 'N/A' }}
       </h2>
-      <h2 class="text-xl font-semibold">
+      <h2 class="font-semibold">
         City:
-        {{ stdata.station?.city || 'N/A' }}
+        {{ stationData.StationCity || 'N/A' }}
       </h2>
       <div class="flex flex-row items-center">
-        <p class="mr-2 text-lg font-semibold">Average Water Quality Index:</p>
+        <p class="mr-2">Average Water Quality Index:</p>
         <div :class="['wqi-cell', getWQIClass(averageWQI)]">
-          <span class="wqi-value font-semibold">{{ averageWQI }}</span>
-          <span class="wqi-description font-semibold">{{ getWQIDescription(averageWQI) }}</span>
+          <span class="wqi-value">{{ averageWQI }}</span>
+          <span class="wqi-description">{{ getWQIDescription(averageWQI) }}</span>
         </div>
       </div>
       <div class="mb-8">
-        <div class="min-w-[300px]">
-          <div class="mt-6 flex flex-row gap-4 sm:flex-col sm:gap-2">
+        <div class="flex min-w-[300px] flex-col">
+          <div class="mt-6 flex flex-row gap-4 sm:gap-2">
             <FloatLabel class="m-auto w-[50%] sm:w-full">
               <DatePicker
                 id="date-from"
@@ -71,7 +77,15 @@
               label="Reset"
               icon="pi pi-refresh"
               @click="resetDatePicker"
-              class="p-button-sm p-button-secondary h-10 m-auto w-[30%] !bg-DarkBlue !text-white transition-colors duration-300 hover:!bg-DarkNavy sm:m-auto sm:!w-[60%]"
+              class="p-button-sm sm:!hidden p-button-secondary m-auto h-10 w-[30%] !bg-DarkBlue !text-white transition-colors duration-300 hover:!bg-DarkNavy"
+            />
+          </div>
+          <div class="m-auto mt-2 sm:block hidden">
+            <Button
+              label="Reset"
+              icon="pi pi-refresh"
+              @click="resetDatePicker"
+              class="p-button-sm p-button-secondary m-auto h-10 w-[30%] !bg-DarkBlue !text-white transition-colors duration-300 hover:!bg-DarkNavy sm:m-auto sm:w-full"
             />
           </div>
         </div>
@@ -88,10 +102,11 @@
         :value="filteredData"
         :paginator="true"
         :rows="20"
+        scrollable scrollHeight="500px"
       >
         <Column
           field="timeStamp"
-          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white  !text-white"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white  !text-white sm:text-sm"
           header="Date"
         >
           <template #body="slotProps">
@@ -100,7 +115,7 @@
         </Column>
         <Column
           field="timeStamp"
-          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white  !text-white"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white  !text-white sm:text-sm"
           header="Time"
         >
           <template #body="slotProps">
@@ -109,11 +124,11 @@
         </Column>
         <Column
           field="wqi"
-          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white sm:text-sm"
         >
           <template #header>
             <div class="flex items-center justify-center">
-              <p class="ml-4 text-base font-semibold">WQI</p>
+              <p class="ml-4 text-base sm:text-sm font-semibold">WQI</p>
             </div>
           </template>
           <template #body="slotProps">
@@ -134,7 +149,7 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">pH</p>
+              <p class="text-lg font-semibold sm:text-sm">pH</p>
             </div>
           </template>
         </Column>
@@ -144,8 +159,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">Temp</p>
-              <div class="text-sm">( °C )</div>
+              <p class="text-lg font-semibold sm:text-sm">Temp</p>
+              <div class="text-sm sm:text-xs">( °C )</div>
             </div>
           </template>
           <template #body="slotProps">{{ slotProps.data.temp }} °C</template>
@@ -156,8 +171,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">DO2</p>
-              <div class="text-sm">( mg / L )</div>
+              <p class="text-lg font-semibold sm:text-sm">DO2</p>
+              <div class="text-sm sm:text-xs">( mg / L )</div>
             </div>
           </template>
           <template #body="slotProps">{{ slotProps.data.dO2 }} mg/L</template>
@@ -168,8 +183,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">BOD5</p>
-              <div class="text-sm">( mg / L )</div>
+              <p class="text-lg font-semibold sm:text-sm">BOD5</p>
+              <div class="text-sm sm:text-xs">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -179,8 +194,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">PO4</p>
-              <div class="text-sm">( mg / L )</div>
+              <p class="text-lg font-semibold sm:text-sm">PO4</p>
+              <div class="text-sm sm:text-xs">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -190,8 +205,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">NO3</p>
-              <div class="text-sm">( mg / L )</div>
+              <p class="text-lg font-semibold sm:text-sm">NO3</p>
+              <div class="text-sm sm:text-xs">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -201,8 +216,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">Ca</p>
-              <div class="text-sm">( mg / L )</div>
+              <p class="text-lg font-semibold sm:text-sm">Ca</p>
+              <div class="text-sm sm:text-xs">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -212,8 +227,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">Mg</p>
-              <div class="text-sm">( mg / L )</div>
+              <p class="text-lg font-semibold sm:text-sm">Mg</p>
+              <div class="text-sm sm:text-xs">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -223,16 +238,16 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">T. H.</p>
-              <div class="text-sm">( mg / L )</div>
+              <p class="text-lg font-semibold sm:text-sm">T. H.</p>
+              <div class="text-sm sm:text-xs">( mg / L )</div>
             </div>
           </template>
         </Column>
         <Column field="k" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white">
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">K</p>
-              <div class="text-sm">( mg / L )</div>
+              <p class="text-lg font-semibold sm:text-sm">K</p>
+              <div class="text-sm sm:text-xs">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -242,8 +257,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">Na</p>
-              <div class="text-sm">( mg / L )</div>
+              <p class="text-lg font-semibold sm:text-sm">Na</p>
+              <div class="text-sm sm:text-xs">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -253,8 +268,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">SO4</p>
-              <div class="text-sm">( mg / L )</div>
+              <p class="text-lg font-semibold sm:text-sm">SO4</p>
+              <div class="text-sm sm:text-xs">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -264,8 +279,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">Cl</p>
-              <div class="text-sm">( mg / L )</div>
+              <p class="text-lg font-semibold sm:text-sm">Cl</p>
+              <div class="text-sm sm:text-xs">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -275,8 +290,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">TDS</p>
-              <div class="text-sm">( mg / L )</div>
+              <p class="text-lg font-semibold sm:text-sm">TDS</p>
+              <div class="text-sm sm:text-xs">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -286,8 +301,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">EC</p>
-              <div class="text-sm">( μS / cm )</div>
+              <p class="text-lg font-semibold sm:text-sm">EC</p>
+              <div class="text-sm sm:text-xs">( μS / cm )</div>
             </div>
           </template>
         </Column>
@@ -297,8 +312,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">Alk.</p>
-              <div class="text-sm">( mg / L )</div>
+              <p class="text-lg font-semibold sm:text-sm">Alk.</p>
+              <div class="text-sm sm:text-xs">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -308,8 +323,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">Acid</p>
-              <div class="text-sm">(mg / L)</div>
+              <p class="text-lg font-semibold sm:text-sm">Acid</p>
+              <div class="text-sm sm:text-xs">(mg / L)</div>
             </div>
           </template>
         </Column>
@@ -319,8 +334,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">OnG</p>
-              <div class="text-sm">( mg / L )</div>
+              <p class="text-lg font-semibold sm:text-sm">OnG</p>
+              <div class="text-sm sm:text-xs">( mg / L )</div>
             </div>
           </template>
         </Column>
@@ -330,8 +345,8 @@
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
-              <p class="text-lg font-semibold">Turb</p>
-              <div class="text-sm">( NTU )</div>
+              <p class="text-lg font-semibold sm:text-sm">Turb</p>
+              <div class="text-sm sm:text-xs">( NTU )</div>
             </div>
           </template>
         </Column>
@@ -417,7 +432,6 @@ const availableParams = [
 
 const selectedDateFrom = ref(null);
 const selectedDateTo = ref(null);
-
 onMounted(async () => {
   const stationId = route.params.id;
   try {
@@ -496,6 +510,28 @@ const chartOption = computed(() => {
   const dates = filteredData.value.map((item) => formatDate(item.timeStamp));
   const values = filteredData.value.map((item) => item[selectedParam.value]);
 
+  const units = {
+    ph: '',
+    temp: '°C',
+    dO2: 'mg/L',
+    boD5: 'mg/L',
+    pO4: 'mg/L',
+    nO3: 'mg/L',
+    ca: 'mg/L',
+    mg: 'mg/L',
+    th: 'mg/L',
+    k: 'mg/L',
+    na: 'mg/L',
+    sO4: 'mg/L',
+    cl: 'mg/L',
+    tds: 'mg/L',
+    ec: 'μS/cm',
+    alk: 'mg/L',
+    acid: 'mg/L',
+    onG: 'mg/L',
+    turb: 'NTU'
+  };
+
   return {
     toolbox: {
       feature: {
@@ -522,7 +558,13 @@ const chartOption = computed(() => {
       data: dates
     },
     yAxis: {
-      type: 'value'
+      type: 'value',
+      name: units[selectedParam.value],
+      nameLocation: 'middle',
+      nameGap: 40,
+      nameTextStyle: {
+        fontWeight: 'bold'
+      }
     },
     series: [
       {
@@ -535,7 +577,12 @@ const chartOption = computed(() => {
       }
     ],
     tooltip: {
-      trigger: 'axis'
+      trigger: 'axis',
+      formatter: function(params) {
+        const value = params[0].value;
+        const date = params[0].axisValue;
+        return `${date}<br/>${selectedParam.value}: ${value} ${units[selectedParam.value]}`;
+      }
     }
   };
 });
@@ -565,11 +612,11 @@ provide(THEME_KEY, 'light');
   @apply !bg-DarkBlue !text-white;
 }
 .wqi-cell {
-  @apply flex h-16 w-16 flex-col items-center justify-center rounded-full shadow-sm;
+  @apply flex h-16 w-16 flex-col items-center justify-center rounded-full shadow-sm sm:h-12 sm:w-12;
 }
 
 .wqi-value {
-  @apply text-sm font-bold;
+  @apply text-sm font-bold sm:text-xs;
 }
 
 .wqi-description {

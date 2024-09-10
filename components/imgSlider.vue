@@ -2,7 +2,7 @@
   <div>
     <Galleria
       :value="images"
-      :circular="false"
+      :circular="true"
       :showIndicators="true"
       :autoPlay="true"
       :transitionInterval="2500"

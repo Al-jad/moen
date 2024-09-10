@@ -3,6 +3,8 @@ export const useStationData = defineStore('StationData', {
     data: null,
     loading: false,
     error: null,
+    stationName: '',
+    StationCity: ''
   }),
   actions: {
     async fetchData(stationId) {

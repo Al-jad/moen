@@ -1,29 +1,27 @@
 <template>
   <div class="container mx-auto">
-    <div class="rounded-t-lg p-3 text-sm text-black">
-      Results :
-    </div>
     <DataTable removableSort
       :value="value"
       class="text-nowrap !bg-DarkBlue"
       :rows="10"
       :paginator="true"
+      scrollable="true"
       @row-click="onRowClick"
       :sortField="'station.externalId'"
       :sortOrder="1"
     >
       <ColumnGroup type="header">
         <Row>
-          <Column header="Station Info" :colspan="3" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
-          <Column header="Last Measurement" :colspan="3" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
+          <Column header="Station Info" :colspan="3" headerClass="!bg-DarkBlue !outline !outline-1 sm:!text-sm !outline-white !text-white" />
+          <Column header="Last Measurement" :colspan="3" headerClass="!bg-DarkBlue !outline !outline-1 sm:!text-sm !outline-white !text-white" />
         </Row>
         <Row>
-          <Column header="ID" :sortable="true" field="station.externalId" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
-          <Column header="Name" :sortable="true" field="station.name" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
-          <Column header="City" :sortable="true" field="station.city" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
-          <Column header="Water Quality Index" :sortable="true" field="wqi" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
-          <Column header="Date" :sortable="true" field="timeStamp" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
-          <Column header="Time" :sortable="true" field="timeStamp" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" />
+          <Column header="ID" :sortable="true" field="station.externalId" headerClass="!bg-DarkBlue sm:!text-sm !outline !outline-1 !outline-white !text-white" />
+          <Column header="Name" :sortable="true" field="station.name" headerClass="!bg-DarkBlue sm:!text-sm !outline !outline-1 !outline-white !text-white" />
+          <Column header="City" :sortable="true" field="station.city" headerClass="!bg-DarkBlue sm:!text-sm !outline !outline-1 !outline-white !text-white" />
+          <Column header="Water Quality Index" :sortable="true" field="wqi" headerClass="!bg-DarkBlue sm:!text-sm !outline !outline-1 !outline-white !text-white" />
+          <Column header="Date" :sortable="true" field="timeStamp" headerClass="!bg-DarkBlue sm:!text-sm !outline !outline-1 !outline-white !text-white" />
+          <Column header="Time" :sortable="true" field="timeStamp" headerClass="!bg-DarkBlue sm:!text-sm !outline !outline-1 !outline-white !text-white" />
         </Row>
       </ColumnGroup>
       <template #empty>
@@ -128,16 +126,21 @@ const formatTime = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 };
+const stationData = useStationData();
 
 const onRowClick = (event) => {
   const stationId = event.data.station.id;
-  router.push(`/stations/manual/details/${stationId}`);
+  stationData.stationName = event.data.station.name;
+  stationData.StationCity = event.data.station.city;
+  router.push({
+    path: `/stations/manual/details/${stationId}`,
+  });
 };
 </script>
 
 <style>
 .p-datatable-sort-icon {
-    color: white !important;
+  @apply !text-white sm:scale-75;
 }
 .p-datatable tr {
   @apply !bg-DarkBlue cursor-pointer;

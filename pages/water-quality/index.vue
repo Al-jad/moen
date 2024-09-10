@@ -1,13 +1,13 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <div class="mb-8 flex flex-col sm:items-start md:flex-row md:items-center md:justify-between">
-      <div class="mb-4 flex items-center justify-between md:mb-0">
+    <div class="mb-8 flex flex-col sm:flex-col md:flex-row md:items-center md:justify-between">
+      <div class="mb-4 flex text-nowrap md:mb-0">
         <div class="flex items-center">
-          <Icon name="fluent:water-16-filled" class="mr-2 text-3xl text-blue-500" />
-          <h1 class="text-2xl font-bold text-black">Water Quality Monitoring Data</h1>
+          <Icon name="fluent:water-16-filled" class="mr-2 text-2xl sm:text-xl text-blue-500" />
+          <h1 class="text-xl sm:text-lg font-bold text-black">Water Quality Monitoring Data</h1>
         </div>
       </div>
-      <div class="sm:hidden md:block">
+      <div class="flex sm:w-full sm:overflow-hidden justify-center sm:justify-start">
         <SelectButton v-model="viewMode" :options="viewOptions" @change="handleViewChange">
           <template #option="slotProps">
             <div class="flex items-center">
@@ -19,7 +19,7 @@
       </div>
     </div>
     <div
-      class="mb-10 flex flex-wrap items-center justify-center gap-6 rounded-lg bg-gray-300 p-6 shadow-md md:flex-nowrap"
+      class="mb-10 flex flex-wrap items-center justify-center gap-6 rounded-lg bg-gray-300 p-6 shadow-md md:flex-nowrap sm:p-4"
     >
       <div class="min-w-[150px] flex-1 md:flex-initial md:w-1/4">
         <label for="city-select" class="mb-2 block text-sm font-semibold text-gray-700">
@@ -89,8 +89,8 @@
           </template>
         </MultiSelect>
       </div>
-      <div class="min-w-[300px] flex-1 md:flex-initial md:w-2/4" v-if="viewMode !== 'Map'">
-        <div class="mt-6 flex items-center gap-3 md:mt-6">
+      <div class="min-w-[300px]  flex-1 md:flex-initial md:w-2/4" v-if="viewMode !== 'Map'">
+        <div class="mt-6 flex items-center sm:hidden gap-3 sm:gap-0 md:mt-6">
           <FloatLabel class="flex-1">
             <DatePicker
               id="date-from"
@@ -119,7 +119,39 @@
             label="Reset"
             icon="pi pi-refresh"
             @click="resetDatePicker"
-            class="p-button-sm p-button-secondary !h-10 !bg-DarkBlue !text-white"
+            class="p-button-sm p-button-secondary !h-10 !bg-DarkBlue !text-white sm:!p-0"
+          />
+        </div>
+        <div class="sm:flex hidden mt-6 flex-col gap-3" v-if="viewMode !== 'Map'">
+          <FloatLabel class="w-full">
+            <DatePicker
+              id="date-from-mobile"
+              v-model="selectedDateFrom"
+              :showIcon="true"
+              dateFormat="dd/mm/yy"
+              class="p-inputtext-sm w-full"
+            />
+            <label for="date-from-mobile" class="block px-2 text-sm font-semibold !text-gray-700">
+              From
+            </label>
+          </FloatLabel>
+          <FloatLabel class="w-full">
+            <DatePicker
+              id="date-to-mobile"
+              v-model="selectedDateTo"
+              :showIcon="true"
+              dateFormat="dd/mm/yy"
+              class="p-inputtext-sm w-full"
+            />
+            <label for="date-to-mobile" class="block px-2 text-sm font-semibold !text-gray-700">
+              To
+            </label>
+          </FloatLabel>
+          <Button
+            label="Reset"
+            icon="pi pi-refresh"
+            @click="resetDatePicker"
+            class="p-button-sm p-button-secondary w-full m-auto !h-10 sm:w-1/2 !bg-DarkBlue !text-white"
           />
         </div>
       </div>
@@ -161,7 +193,6 @@ const manualStationStore = useManualStation();
 const manualDetailsStore = useManualDetails();
 const router = useRouter();
 const route = useRoute();
-
 const allCitiesSelected = ref(true);
 const allStationsSelected = ref(true);
 
@@ -294,7 +325,7 @@ const filteredMapStations = computed(() => {
 
 <style>
 .p-selectbutton .p-togglebutton {
-  @apply !bg-gray-300 !text-black sm:min-w-[13.5rem];
+  @apply !bg-gray-300 !text-black sm:min-w-[90%];
 }
 .p-selectbutton .p-togglebutton-checked {
   @apply !text-white;
