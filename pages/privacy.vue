@@ -30,7 +30,7 @@ const lastUpdated = ref('June 1, 2023');
 const privacySections = ref([
     {
         title: '1. Introduction',
-        content: 'Welcome to www.dataportalmowr.alfakharco.com. We value your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services. Please read this policy carefully. If you do not agree with the terms of this Privacy Policy, please do not access the site.'
+        content: 'Welcome to (env.alfakharco.com). We value your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services. Please read this policy carefully. If you do not agree with the terms of this Privacy Policy, please do not access the site.'
     },
     {
         title: '2. Information We Collect',

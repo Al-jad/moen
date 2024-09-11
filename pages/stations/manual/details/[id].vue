@@ -101,12 +101,12 @@
         v-if="filteredData.length > 0"
         :value="filteredData"
         :paginator="true"
-        :rows="20"
-        scrollable scrollHeight="500px"
+        :rows="10"
       >
         <Column
           field="timeStamp"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white  !text-white sm:text-sm"
+          bodyClass="!text-center"
           header="Date"
         >
           <template #body="slotProps">
@@ -116,6 +116,7 @@
         <Column
           field="timeStamp"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white  !text-white sm:text-sm"
+          bodyClass="!text-center"
           header="Time"
         >
           <template #body="slotProps">
@@ -125,10 +126,11 @@
         <Column
           field="wqi"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white sm:text-sm"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex items-center justify-center">
-              <p class="ml-4 text-base sm:text-sm font-semibold">WQI</p>
+              <p class="ml-2 text-base sm:text-sm font-semibold">WQI</p>
             </div>
           </template>
           <template #body="slotProps">
@@ -140,12 +142,13 @@
               <span class="wqi-value">{{ slotProps.data.wqi }}</span>
               <span class="wqi-description">{{ getWQIDescription(slotProps.data.wqi) }}</span>
             </div>
-            <span v-else class="ml-16">0</span>
+            <span v-else class="">0</span>
           </template>
         </Column>
         <Column
           field="ph"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -156,6 +159,7 @@
         <Column
           field="temp"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -168,6 +172,7 @@
         <Column
           field="dO2"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -180,6 +185,7 @@
         <Column
           field="boD5"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -191,6 +197,7 @@
         <Column
           field="pO4"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -202,6 +209,7 @@
         <Column
           field="nO3"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -213,6 +221,7 @@
         <Column
           field="ca"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -224,6 +233,7 @@
         <Column
           field="mg"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -235,6 +245,7 @@
         <Column
           field="th"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -243,7 +254,7 @@
             </div>
           </template>
         </Column>
-        <Column field="k" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white">
+        <Column field="k" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" bodyClass="!text-center">
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold sm:text-sm">K</p>
@@ -254,6 +265,7 @@
         <Column
           field="na"
           headerClass="!bg-DarkBlue  !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -265,6 +277,7 @@
         <Column
           field="sO4"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -276,6 +289,7 @@
         <Column
           field="cl"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -287,6 +301,7 @@
         <Column
           field="tds"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -298,6 +313,7 @@
         <Column
           field="ec"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -309,6 +325,7 @@
         <Column
           field="alk"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -320,6 +337,7 @@
         <Column
           field="acid"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -331,6 +349,7 @@
         <Column
           field="onG"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -342,6 +361,7 @@
         <Column
           field="turb"
           headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
         >
           <template #header>
             <div class="flex flex-col items-center gap-2">
@@ -460,7 +480,7 @@ const formatDate = (dateString) => {
 
 const formatTime = (dateString) => {
   const date = new Date(dateString);
-  return date.toLocaleTimeString('en-GB', {
+  return date.toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit'
   });
@@ -507,11 +527,11 @@ const averageWQI = computed(() => {
 const chartOption = computed(() => {
   if (!filteredData.value) return {};
 
-  const dates = filteredData.value.map((item) => formatDate(item.timeStamp));
-  const values = filteredData.value.map((item) => item[selectedParam.value]);
+  const dates = filteredData.value.map((item) => formatDate(item.timeStamp)).reverse();
+  const values = filteredData.value.map((item) => item[selectedParam.value]).reverse();
 
   const units = {
-    ph: '',
+    ph: 'unitless',
     temp: '°C',
     dO2: 'mg/L',
     boD5: 'mg/L',
@@ -529,7 +549,8 @@ const chartOption = computed(() => {
     alk: 'mg/L',
     acid: 'mg/L',
     onG: 'mg/L',
-    turb: 'NTU'
+    turb: 'NTU',
+    wqi: 'unitless'
   };
 
   return {
@@ -647,13 +668,13 @@ provide(THEME_KEY, 'light');
 }
 
 .p-datatable .p-datatable-tbody > tr.p-row-even {
-  @apply !bg-gray-100 !text-black;
+  @apply !bg-gray-100 !text-black !text-center;
 }
 .p-datatable .p-datatable-tbody > tr.p-row-odd {
-  @apply !bg-gray-200 !text-black;
+  @apply !bg-gray-200 !text-black !text-center;
 }
 .p-datatable .p-datatable-tbody > tr:not(.p-datatable-empty-message):hover {
-  @apply !bg-gray-300 !text-black;
+  @apply !bg-gray-300 !text-black !text-center;
 }
 .p-paginator-rpp-dropdown {
   @apply border-white !bg-DarkNavy !text-white;

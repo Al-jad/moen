@@ -5,7 +5,7 @@
       class="text-nowrap !bg-DarkBlue"
       :rows="10"
       :paginator="true"
-      scrollable="true"
+      :scrollable="true"
       @row-click="onRowClick"
       :sortField="'station.externalId'"
       :sortOrder="1"

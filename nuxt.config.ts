@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     "nuxt3-leaflet",
     "nuxt-icon",
-    "nuxt-echarts"
+    "nuxt-echarts",
   ],
   primevue: {
     options: {
@@ -31,5 +31,8 @@ export default defineNuxtConfig({
     imports: {
       dir: ['./stores']
     }
-  }
+  },
+  router: {
+    middleware: ['auth']
+  },
 });

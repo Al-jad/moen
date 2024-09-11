@@ -6,7 +6,7 @@
             <section class="mb-8">
                 <h2 class="text-2xl font-semibold text-gray-800 mb-4">1. Introduction</h2>
                 <p class="text-gray-700">
-                    Welcome to <strong>www.dataportalmowr.alfakharco.com</strong>. These Terms of Service govern your
+                    Welcome to <strong>(env.alfakharco.com)</strong>. These Terms of Service govern your
                     access to and use of our website and services. By accessing or using our
                     services, you agree to comply with and be bound by these Terms. If you do not agree to these Terms,
                     please do not use our site.
@@ -38,7 +38,7 @@
                 <h2 class="text-2xl font-semibold text-gray-800 mb-4">4. Intellectual Property</h2>
                 <p class="text-gray-700">
                     All content on the Site, including text, graphics, logos, images, and software, is the property of
-                    www.dataportalmowr.alfakharco.com or its content suppliers and is protected by intellectual property
+                    (env.alfakharco.com) or its content suppliers and is protected by intellectual property
                     laws. You may not use, reproduce, distribute, or create derivative works from any content on the
                     Site without our express written permission.
                 </p>
@@ -56,7 +56,7 @@
             <section class="mb-8">
                 <h2 class="text-2xl font-semibold text-gray-800 mb-4">6. Limitation of Liability</h2>
                 <p class="text-gray-700">
-                    In no event shall www.dataportalmowr.alfakharco.com, its directors, employees, partners, agents,
+                    In no event shall (env.alfakharco.com), its directors, employees, partners, agents,
                     suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or
                     punitive damages, including without limitation, loss of profits, data, use, goodwill, or other
                     intangible losses, resulting from (i) your use or inability to use the Site; (ii) any unauthorized
