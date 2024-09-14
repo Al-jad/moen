@@ -45,5 +45,9 @@ export const useStationData = defineStore('StationData', {
         this.loading = false;
       }
     },
+    setStationInfo(city, name) {
+      this.StationCity = city;
+      this.stationName = name;
+    }
   },
 });

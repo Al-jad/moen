@@ -33,7 +33,7 @@
     >
       <h2 class="mb-4">
         Station:
-        {{ stationData.stationName || 'N/A' }}
+        {{ stationData?.stationName }}
       </h2>
       <h2 class="font-semibold">
         City:
@@ -77,10 +77,10 @@
               label="Reset"
               icon="pi pi-refresh"
               @click="resetDatePicker"
-              class="p-button-sm sm:!hidden p-button-secondary m-auto h-10 w-[30%] !bg-DarkBlue !text-white transition-colors duration-300 hover:!bg-DarkNavy"
+              class="p-button-sm p-button-secondary m-auto h-10 w-[30%] !bg-DarkBlue !text-white transition-colors duration-300 hover:!bg-DarkNavy sm:!hidden"
             />
           </div>
-          <div class="m-auto mt-2 sm:block hidden">
+          <div class="m-auto mt-2 hidden sm:block">
             <Button
               label="Reset"
               icon="pi pi-refresh"
@@ -130,7 +130,7 @@
         >
           <template #header>
             <div class="flex items-center justify-center">
-              <p class="ml-2 text-base sm:text-sm font-semibold">WQI</p>
+              <p class="ml-2 text-base font-semibold sm:text-sm">WQI</p>
             </div>
           </template>
           <template #body="slotProps">
@@ -254,7 +254,11 @@
             </div>
           </template>
         </Column>
-        <Column field="k" headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white" bodyClass="!text-center">
+        <Column
+          field="k"
+          headerClass="!bg-DarkBlue !outline !outline-1 !outline-white !text-white"
+          bodyClass="!text-center"
+        >
           <template #header>
             <div class="flex flex-col items-center gap-2">
               <p class="text-lg font-semibold sm:text-sm">K</p>
@@ -452,22 +456,6 @@ const availableParams = [
 
 const selectedDateFrom = ref(null);
 const selectedDateTo = ref(null);
-onMounted(async () => {
-  const stationId = route.params.id;
-  try {
-    await stationData.fetchData(stationId);
-    stdata.value = stationData.data;
-    if (!stdata.value || !stdata.value.data) {
-      throw new Error('No data received from the server');
-    }
-    stdata.value = stdata.value.data;
-  } catch (error) {
-    console.error('Error fetching station data:', error);
-    stationData.error = 'Failed to fetch station data. Please try again later.';
-  } finally {
-    isLoading.value = false;
-  }
-});
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -599,7 +587,7 @@ const chartOption = computed(() => {
     ],
     tooltip: {
       trigger: 'axis',
-      formatter: function(params) {
+      formatter: function (params) {
         const value = params[0].value;
         const date = params[0].axisValue;
         return `${date}<br/>${selectedParam.value}: ${value} ${units[selectedParam.value]}`;
@@ -614,6 +602,30 @@ const resetDatePicker = () => {
 };
 
 provide(THEME_KEY, 'light');
+
+onMounted(async () => {
+  const stationId = route.params.id;
+  try {
+    await stationData.fetchData(stationId);
+    stdata.value = stationData.data;
+    if (!stdata.value || !stdata.value.data) {
+      throw new Error('No data received from the server');
+    }
+    stdata.value = stdata.value.data;
+    if (!stationData.stationName || !stationData.StationCity) {
+      const storedStationName = localStorage.getItem('stationName');
+      const storedStationCity = localStorage.getItem('stationCity');
+      if (storedStationName && storedStationCity) {
+        stationData.setStationInfo(storedStationCity, storedStationName);
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching station data:', error);
+    stationData.error = 'Failed to fetch station data. Please try again later.';
+  } finally {
+    isLoading.value = false;
+  }
+});
 </script>
 
 <style>
@@ -668,13 +680,13 @@ provide(THEME_KEY, 'light');
 }
 
 .p-datatable .p-datatable-tbody > tr.p-row-even {
-  @apply !bg-gray-100 !text-black !text-center;
+  @apply !bg-gray-100 !text-center !text-black;
 }
 .p-datatable .p-datatable-tbody > tr.p-row-odd {
-  @apply !bg-gray-200 !text-black !text-center;
+  @apply !bg-gray-200 !text-center !text-black;
 }
 .p-datatable .p-datatable-tbody > tr:not(.p-datatable-empty-message):hover {
-  @apply !bg-gray-300 !text-black !text-center;
+  @apply !bg-gray-300 !text-center !text-black;
 }
 .p-paginator-rpp-dropdown {
   @apply border-white !bg-DarkNavy !text-white;

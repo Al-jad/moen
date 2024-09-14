@@ -90,6 +90,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStationData } from '@/stores/stationData'; // Make sure this import is present
 
 const router = useRouter();
 
@@ -126,16 +127,38 @@ const formatTime = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 };
+
 const stationData = useStationData();
 
 const onRowClick = (event) => {
   const stationId = event.data.station.id;
-  stationData.stationName = event.data.station.name;
-  stationData.StationCity = event.data.station.city;
-  router.push({
-    path: `/stations/manual/details/${stationId}`,
+  const stationCity = event.data.station.city;
+  const stationName = event.data.station?.name;
+  
+  // Update the stationData store
+  stationData.setStationInfo(stationCity, stationName);
+
+  console.log('Station Name:', stationName);
+  console.log('Station City:', stationCity);
+  console.log('Full station data:', event.data.station);
+
+  // Use nextTick to ensure the store is updated before navigation
+  nextTick(() => {
+    // Persist the data in localStorage before navigation
+    localStorage.setItem('stationCity', stationCity);
+    localStorage.setItem('stationName', stationName);
+
+    router.push({
+      path: `/stations/manual/details/${stationId}`,
+      query: {
+        stationName: stationName,
+        stationCity: stationCity
+      }
+    });
   });
 };
+
+// Remove the onMounted hook from here, as it's not needed in this component
 </script>
 
 <style>
