@@ -378,21 +378,31 @@
           </template>
         </Column>
         <Column
-        header="Action" headerClass="!text-center !text-white !bg-DarkBlue"
-        bodyClass="!text-center" v-if="username === 'admin'"
-    >
-        <template #body="slotProps">
-            <div >
-                <Button
-                    icon="pi pi-trash"
-                    class="p-button-danger"
-                    @click="deleteStation(slotProps.data.id)"
-                    aria-label="Delete"
-                />
+          header="Action"
+          headerClass="!text-center !text-white !bg-DarkBlue"
+          bodyClass="!text-center"
+          v-if="username === 'admin'"
+        >
+          <template #body="slotProps">
+            <div>
+              <Button
+                icon="pi pi-trash"
+                class="p-button-danger"
+                @click="showConfirmDeleteModal(slotProps.data.id)"
+                aria-label="Delete"
+              />
             </div>
-        </template>
-    </Column>
+          </template>
+        </Column>
+        <Dialog v-model:visible="confirmDeleteVisible" class="!bg-DarkBlue" header="Confirm Delete" :modal="true">
+          <p>Are you sure you want to delete this station?</p>
+          <template #footer>
+            <Button label="No"  icon="pi pi-times" @click="confirmDeleteVisible = false" />
+            <Button label="Yes" icon="pi pi-check" @click="confirmDelete" />
+          </template>
+        </Dialog>
       </DataTable>
+
       <p v-else-if="!selectedDateFrom || !selectedDateTo" class="text-center text-lg">
         No data available for this station.
       </p>
@@ -614,14 +624,26 @@ const chartOption = computed(() => {
   };
 });
 
-const manualData = useManualStation()
+const manualData = useManualStation();
 const deleteStation = async (id) => {
-    try {
-        await manualData.deleteData(id);
-        window.location.reload();
-    } catch (error) {
-        console.error('Error deleting station:', error);
-    }
+  try {
+    await manualData.deleteData(id);
+    window.location.reload();
+  } catch (error) {
+    console.error('Error deleting station:', error);
+  }
+};
+const confirmDeleteVisible = ref(false);
+const stationToDelete = ref(null);
+
+const showConfirmDeleteModal = (id) => {
+  stationToDelete.value = id;
+  confirmDeleteVisible.value = true;
+};
+
+const confirmDelete = () => {
+  deleteStation(stationToDelete.value);
+  confirmDeleteVisible.value = false; // Close the dialog after deletion
 };
 
 const resetDatePicker = () => {
@@ -653,7 +675,6 @@ onMounted(async () => {
   } finally {
     isLoading.value = false;
   }
-
 });
 </script>
 
