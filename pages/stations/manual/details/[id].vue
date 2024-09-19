@@ -142,7 +142,10 @@
               <span class="wqi-value">{{ slotProps.data.wqi }}</span>
               <span class="wqi-description">{{ getWQIDescription(slotProps.data.wqi) }}</span>
             </div>
-            <span v-else class="">0</span>
+            <div v-else class="wqi-cell very-poor inline-flex">
+              <span class="wqi-value">0</span>
+              <span class="wqi-description">مرفوض</span>
+            </div>
           </template>
         </Column>
         <Column
@@ -521,22 +524,22 @@ const chartOption = computed(() => {
   const units = {
     ph: 'unitless',
     temp: '°C',
-    dO2: 'mg/L',
-    boD5: 'mg/L',
-    pO4: 'mg/L',
-    nO3: 'mg/L',
-    ca: 'mg/L',
-    mg: 'mg/L',
-    th: 'mg/L',
-    k: 'mg/L',
-    na: 'mg/L',
-    sO4: 'mg/L',
-    cl: 'mg/L',
-    tds: 'mg/L',
-    ec: 'μS/cm',
+    dO2: 'mg / L',
+    boD5: 'mg / L',
+    pO4: 'mg / L',
+    nO3: 'mg / L',
+    ca: 'mg / L',
+    mg: 'mg / L',
+    th: 'mg / L',
+    k: 'mg / L',
+    na: 'mg / L',
+    sO4: 'mg / L',
+    cl: 'mg / L',
+    tds: 'mg / L',
+    ec: 'μS / cm',
     alk: 'mg/L',
-    acid: 'mg/L',
-    onG: 'mg/L',
+    acid: 'mg / L',
+    onG: 'mg / L',
     turb: 'NTU',
     wqi: 'unitless'
   };

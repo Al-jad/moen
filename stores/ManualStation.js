@@ -33,7 +33,7 @@ export const useManualDetails = defineStore('ManualStationDetails', {
                 console.error("Error fetching manual station data:", this.error);
 
                 if (error.response?.status === 401 || this.error.includes('Unauthorized')) {
-                    alert('Unauthorized Access. Please login again.');
+                    // alert('Unauthorized Access. Please login again.');
                     const router = useRouter();
                     router.push('/login');
                 }

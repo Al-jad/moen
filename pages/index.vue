@@ -38,6 +38,15 @@
           alt="Biodiversity"
         />
       </div>
+      <div class="container mx-auto flex flex-col gap-6 py-8">
+        <h1 class="text-left sm:mx-[10%] sm:text-base text-2xl font-extrabold">
+          Environmental Laws
+        </h1>
+        <Law
+          title="Environmental Laws"
+          description="laws that protect the environment and its resources. They are designed to prevent pollution, conserve energy, and protect the environment from harmful substances."
+        />
+      </div>
     </main>
   </div>
 </template>
