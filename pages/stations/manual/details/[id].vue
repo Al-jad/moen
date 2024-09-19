@@ -377,6 +377,21 @@
             </div>
           </template>
         </Column>
+        <Column
+        header="Action" headerClass="!text-center !text-white !bg-DarkBlue"
+        bodyClass="!text-center" v-if="username === 'admin'"
+    >
+        <template #body="slotProps">
+            <div >
+                <Button
+                    icon="pi pi-trash"
+                    class="p-button-danger"
+                    @click="deleteStation(slotProps.data.id)"
+                    aria-label="Delete"
+                />
+            </div>
+        </template>
+    </Column>
       </DataTable>
       <p v-else-if="!selectedDateFrom || !selectedDateTo" class="text-center text-lg">
         No data available for this station.
@@ -599,13 +614,23 @@ const chartOption = computed(() => {
   };
 });
 
+const manualData = useManualStation()
+const deleteStation = async (id) => {
+    try {
+        await manualData.deleteData(id);
+        window.location.reload();
+    } catch (error) {
+        console.error('Error deleting station:', error);
+    }
+};
+
 const resetDatePicker = () => {
   selectedDateFrom.value = null;
   selectedDateTo.value = null;
 };
 
 provide(THEME_KEY, 'light');
-
+const username = process.client ? localStorage.getItem('username') || 'Guest' : 'Guest';
 onMounted(async () => {
   const stationId = route.params.id;
   try {
@@ -628,6 +653,7 @@ onMounted(async () => {
   } finally {
     isLoading.value = false;
   }
+
 });
 </script>
 

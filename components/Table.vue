@@ -132,12 +132,6 @@ const onRowClick = (event) => {
   
   
   stationData.setStationInfo(stationCity, stationName);
-
-  console.log('Station Name:', stationName);
-  console.log('Station City:', stationCity);
-  console.log('Full station data:', event.data.station);
-
-  
   nextTick(() => {
     
     localStorage.setItem('stationCity', stationCity);
